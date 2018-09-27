@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <!--声明项目描述符遵循哪一个POM模型版本。
+        模型本身的版本很少改变，虽然如此，但它仍然是必不可少的，
+        这是为了当Maven引入了新的特性或者其他模型变更的时候，确保稳定性。-->
+    <modelVersion>4.0.0</modelVersion>
+
+    <!--父项目的坐标。如果项目中没有规定某个元素的值，那么父项目中的对应值即为项目的默认值。
+        坐标包括group ID，artifact ID和 version。-->
+    <parent>
+        <artifactId>MySpringBoot</artifactId>
+        <groupId>com.bookool</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <!--构件的标识符，它和group ID一起唯一标识一个构件。
+        换句话说，你不能有两个不同的项目拥有同样的artifact ID和groupID；在某个特定的group ID下，artifact ID也必须是唯一的。
+        构件是项目产生的或使用的一个东西，Maven为项目产生的构件包括：JARs，源码，二进制发布和WARs等。-->
+    <artifactId>MyBoot</artifactId>
+
+    <!--项目产生的构件类型，例如jar、war、ear、pom。
+        插件可以创建他们自己的构件类型，所以前面列的不是全部构件类型-->
+    <packaging>jar</packaging>
+
+    <!--项目当前版本，格式为:主版本.次版本.增量版本-限定版本号-->
+    <version>1.0-SNAPSHOT</version>
+
+    <!--项目的名称, Maven产生的文档用-->
+    <name>MyBoot</name>
+
+    <!--项目主页的URL, Maven产生的文档用-->
+    <url>http://www.bookool.com/</url>
+
+    <!--项目的详细描述, Maven 产生的文档用。
+        当这个元素能够用HTML格式描述时（例如，CDATA中的文本会被解析器忽略，就可以包含HTML标签）， 不鼓励使用纯文本描述。
+        如果你需要修改产生的web站点的索引页面，你应该修改你自己的索引页文件，而不是调整这里的文档。-->
+    <description>Demo project for MyBoot</description>
+
+    <!--在列的项目构建profile，如果被激活，会修改构建处理-->
+    <profiles>
+
+        <!--根据环境参数或命令行参数激活某个构建处理-->
+        <profile>
+
+            <!--构建配置的唯一标识符。即用于命令行激活，也用于在继承时合并具有相同标识符的profile。-->
+            <id>develop</id>
+
+            <!--自动触发profile的条件逻辑。Activation是profile的开启钥匙。
+            profile的力量来自于它能够在某些特定的环境中自动使用某些特定的值；
+            这些环境通过activation元素指定。
+            activation元素并不是激活profile的唯一方式。-->
+            <activation>
+
+                <!--profile默认是否激活的标志-->
+                <activeByDefault>true</activeByDefault>
+
+            </activation>
+
+            <!--以值替代名称，Properties可以在整个POM中使用，
+            也可以作为触发条件（见settings.xml配置文件里activation元素的说明）。
+            格式是<name>value</name>。-->
+            <properties>
+                <profileActive>develop</profileActive>
+            </properties>
+
+        </profile>
+
+        <profile>
+
+            <!--构建配置的唯一标识符。即用于命令行激活，也用于在继承时合并具有相同标识符的profile。-->
+            <id>production</id>
+
+            <!--以值替代名称，Properties可以在整个POM中使用，
+            也可以作为触发条件（见settings.xml配置文件里activation元素的说明）。
+            格式是<name>value</name>。-->
+            <properties>
+                <profileActive>production</profileActive>
+            </properties>
+
+        </profile>
+
+    </profiles>
+
+    <!--构建项目需要的信息-->
+    <build>
+        <!--产生的构建的文件名，默认值是${artifactId}-${version}。-->
+        <finalName>myboot</finalName>
+
+        <!--当filtering开关打开时，使用到的过滤器属性文件列表-->
+        <filters>
+            <filter>src/main/resources/application.yml</filter>
+            <filter>src/main/resources/application-develop.yml</filter>
+        </filters>
+
+        <!--这个元素描述了项目相关的所有资源路径列表，例如和项目相关的属性文件，这些资源被包含在最终的打包文件里。-->
+        <resources>
+
+            <!--这个元素描述了项目相关或测试相关的所有资源路径-->
+            <resource>
+
+                <!--是否使用参数值代替参数名。参数值取自properties元素或者文件里配置的属性，文件在filters元素里列出。-->
+                <filtering>true</filtering>
+
+                <!--描述存放资源的目录，该路径相对POM路径-->
+                <directory>src/main/resources</directory>
+
+                <!--包含的模式列表，例如**/*.xml.-->
+                <includes>
+                    <include>application.yml</include>
+                    <include>application-${profileActive}.yml</include>
+                    <include>com/**</include>
+                    <include>*.xml</include>
+                    <!--<include>*.json</include>-->
+                    <!--<include>*.properties</include>-->
+                    <!--<include>*.txt</include>-->
+                    <!--<include>*.rule</include>-->
+                </includes>
+
+                <!--排除的模式列表，例如**/*.xml-->
+                <!--<excludes/>-->
+
+            </resource>
+
+        </resources>
+
+        <!--使用的插件列表-->
+        <plugins>
+            <!--参见build/pluginManagement/plugins/plugin元素-->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <!-- 将Spring Boot应用打包为可执行的jar或war文件，
+                然后以通常的方式运行Spring Boot应用 -->
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <layout>JAR</layout>
+                    <!-- 如果没有该配置，devtools不会生效 -->
+                    <fork>true</fork>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <!-- 操作jar包 -->
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>unpack</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>com.bookool</groupId>
+                                    <artifactId>MyBoot</artifactId>
+                                    <version>1.0-SNAPSHOT</version>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <!-- maven编译 -->
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

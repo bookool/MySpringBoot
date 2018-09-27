@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 用户基础信息表 -->
+<mapper namespace="com.bookool.myboot.mapper.UserBaseMapper">
+    <resultMap id="BaseResultMap" type="com.bookool.myboot.domain.dto.result.UserBaseResult">
+        <!-- id -->
+        <id column="id" property="id"/>
+        <!-- 创建时间 -->
+        <result column="gmt_create" property="gmtCreate"/>
+        <!-- 修改时间 -->
+        <result column="gmt_modified" property="gmtModified"/>
+        <!-- 手机号码 -->
+        <result column="mobile" property="mobile"/>
+        <!-- 用户名 -->
+        <result column="user_name" property="userName"/>
+        <!-- 电子邮箱 -->
+        <result column="email" property="email"/>
+        <!-- 微信OpenID -->
+        <result column="wx_openid" property="wxOpenid"/>
+        <!-- 微信UnionID -->
+        <result column="wx_unionid" property="wxUnionid"/>
+        <!-- 用户密码MD5 -->
+        <result column="user_password" property="userPassword"/>
+        <!-- 微信UnionID -->
+        <result column="wx_unionid" property="wxUnionid"/>
+        <!-- 头像链接地址 -->
+        <result column="icon_url" property="iconUrl"/>
+        <!-- 用户状态 -->
+        <result column="user_state" property="userState"/>
+        <!-- 用户等级 -->
+        <result column="user_status" property="userStatus"/>
+    </resultMap>
+
+    <!-- 分页 -->
+    <sql id="BaseSqlPage">
+        <if test="offset!=null and rows!=null">
+            LIMIT #{offset}, #{rows}
+        </if>
+    </sql>
+
+    <!-- 基础输出字段 -->
+    <sql id="BaseSqlColumnList">
+        `id`, `gmt_create`, `gmt_modified`, `mobile`, `user_name`,
+        `email`, `wx_openid`, `wx_unionid`, `user_password`, `nick_name`,
+        `icon_url`, `user_state`, `user_status`
+	</sql>
+
+    <!-- 基础输出字段(手动分页专用) -->
+    <sql id="BaseSqlColumnListCustomPage">
+        `ta`.`id`, `ta`.`gmt_create`, `ta`.`gmt_modified`, `ta`.`mobile`, `ta`.`user_name`,
+        `ta`.`email`, `ta`.`wx_openid`, `ta`.`wx_unionid`, `ta`.`user_password`, `ta`.`nick_name`,
+        `ta`.`icon_url`, `ta`.`user_state`, `ta`.`user_status`
+	</sql>
+
+    <!-- 基础查询条件分页用 -->
+    <sql id="BaseSqlWhere">
+        <trim prefix="WHERE" prefixOverrides="AND|OR">
+            <if test="id!=null">
+                AND `id` = #{id}
+            </if>
+            <if test="mobile!=null and mobile!=''">
+                AND `mobile` = #{mobile}
+            </if>
+            <if test="userName!=null and userName!=''">
+                AND `user_name` = #{userName}
+            </if>
+            <if test="email!=null and email!=''">
+                AND `email` = #{email}
+            </if>
+            <if test="wxOpenid!=null and wxOpenid!=''">
+                AND `wx_openid` = #{wxOpenid}
+            </if>
+            <if test="wxUnionid!=null and wxUnionid!=''">
+                AND `wx_unionid` = #{wxUnionid}
+            </if>
+            <if test="userPassword!=null and userPassword!=''">
+                AND `user_password` = #{userPassword}
+            </if>
+            <if test="nickName!=null and nickName!=''">
+                AND `nick_name` = #{nickName}
+            </if>
+            <if test="iconUrl!=null and iconUrl!=''">
+                AND `icon_url` = #{iconUrl}
+            </if>
+            <if test="userState!=null and userState!=''">
+                AND `user_state` = #{userState}
+            </if>
+            <if test="userStatus!=null and userStatus!=''">
+                AND `user_status` = #{userStatus}
+            </if>
+        </trim>
+    </sql>
+
+    <!-- 基础模板 取得符合条件的 user_base 的记录个数 -->
+    <select id="getListCount" resultType="java.lang.Long"
+            parameterType="com.bookool.myboot.domain.dto.param.UserBaseParam">
+        SELECT COUNT(*)
+        FROM user_base
+        <include refid="BaseSqlWhere"/>
+    </select>
+
+    <!-- 基础查询条件分页用 -->
+    <sql id="BaseSqlWherePage">
+        <trim prefix="WHERE" prefixOverrides="AND|OR">
+            <if test="param.id!=null">
+                AND `id` = #{param.id}
+            </if>
+            <if test="param.mobile!=null and param.mobile!=''">
+                AND `mobile` = #{param.mobile}
+            </if>
+            <if test="param.userName!=null and param.userName!=''">
+                AND `user_name` = #{param.userName}
+            </if>
+            <if test="param.email!=null and param.email!=''">
+                AND `email` = #{param.email}
+            </if>
+            <if test="param.wxOpenid!=null and param.wxOpenid!=''">
+                AND `wx_openid` = #{param.wxOpenid}
+            </if>
+            <if test="param.wxUnionid!=null and param.wxUnionid!=''">
+                AND `wx_unionid` = #{param.wxUnionid}
+            </if>
+            <if test="param.userPassword!=null and param.userPassword!=''">
+                AND `user_password` = #{param.userPassword}
+            </if>
+            <if test="param.nickName!=null and param.nickName!=''">
+                AND `nick_name` = #{param.nickName}
+            </if>
+            <if test="param.iconUrl!=null and param.iconUrl!=''">
+                AND `icon_url` = #{param.iconUrl}
+            </if>
+            <if test="param.userState!=null and param.userState!=''">
+                AND `user_state` = #{param.userState}
+            </if>
+            <if test="param.userStatus!=null and param.userStatus!=''">
+                AND `user_status` = #{param.userStatus}
+            </if>
+        </trim>
+    </sql>
+
+    <!-- 基础模板 取得符合条件的 user_base 列表手动分页 -->
+    <select id="getListPage" resultMap="BaseResultMap"
+            parameterType="com.bookool.myboot.service.impl.base.PageListParam">
+        SELECT
+        <include refid="BaseSqlColumnListCustomPage"/>
+        FROM `user_base` `ta`
+        INNER JOIN
+        (
+        SELECT `id`
+        FROM `user_base`
+        <include refid="BaseSqlWherePage"/>
+        <include refid="BaseSqlPage"/>
+        ) `tb`
+        ON `ta`.`id` = `tb`.`id`
+    </select>
+
+    <!-- 基础模板 取得符合条件的 user_base 列表 -->
+    <select id="getList" resultMap="BaseResultMap"
+            parameterType="com.bookool.myboot.service.impl.base.PageListParam">
+        SELECT
+        <include refid="BaseSqlColumnList"/>
+        FROM `user_base`
+        <include refid="BaseSqlWherePage"/>
+    </select>
+
+</mapper>
