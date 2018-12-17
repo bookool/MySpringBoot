@@ -19,6 +19,7 @@ import java.util.List;
 
 /**
  * WebMvc配置，跨域支持
+ * 输出 json ，将所有的 long 变成 string ，因为 javascript 中得数字类型不能包含所有的 java long 值
  *
  * @author Tommy
  */
@@ -47,7 +48,7 @@ public class WebConfig implements WebMvcConfigurer {
     }
 
     /**
-     * 序列换成json时,将所有的long变成string,因为js中得数字类型不能包含所有的java long值
+     * 序列换成json时,将所有的long变成string,因为 javascript 中得数字类型不能包含所有的java long值
      * 如果客户端使用javascript，则必须如此处理
      * 因为javascript中，所有数据，也就是Number类型统一按浮点数处理，64位存储，
      * 整数是按最大54位来算最大最小数的，否则会丧失精度；某些操作（如数组索引还有位操作）是按32位处理的

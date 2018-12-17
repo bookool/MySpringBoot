@@ -4,6 +4,8 @@ import com.bookool.myboot.domain.dto.BaseParam;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.util.Date;
+
 /**
  * user_base 参数传输对象
  *
@@ -19,7 +21,7 @@ public class UserBaseParam extends BaseParam {
     private String mobile;
 
     /**
-     * 用户名
+     * 用户名(至少3位,必须包含非数字非符合的字符,不能包含@符)
      */
     private String userName;
 
@@ -42,6 +44,11 @@ public class UserBaseParam extends BaseParam {
      * 用户密码MD5
      */
     private String userPassword;
+
+    /**
+     * 用户修改密码的时间
+     */
+    private Date passwordModified;
 
     /**
      * 昵称

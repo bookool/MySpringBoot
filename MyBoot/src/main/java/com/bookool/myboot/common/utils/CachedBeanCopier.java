@@ -10,7 +10,10 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 给BeanCopier包装缓存，以提高效率
+ * 给 BeanCopier 包装缓存，以提高效率
+ * 本项目使用 BeanCopier 进行实体的拷贝
+ * BeanCopier 在创建的时候消耗时间较大，这里对 BeanCopier 进行缓存，以提高效率
+ * 同时封装了一些通用方法
  *
  * @author Tommy
  */
@@ -43,19 +46,10 @@ public class CachedBeanCopier {
      * @param sourceList  源List对象
      * @param targetClazz 目标类型
      */
-    @Nullable
     public static <P, T> List<T> copyList(@NotNull List<P> sourceList, Class<T> targetClazz) {
         List<T> targetList = new ArrayList<>();
         for (P sobj : sourceList) {
-            T tobj;
-            try {
-                tobj = targetClazz.newInstance();
-            } catch (Exception ex) {
-                ex.printStackTrace();
-                return null;
-            }
-            copy(sobj, tobj);
-            targetList.add(tobj);
+            targetList.add(copyToNew(sobj, targetClazz));
         }
         return targetList;
     }

@@ -15,12 +15,14 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
         <junit.version>4.12</junit.version>
-        <spring-boot-starter-web.version>2.0.5.RELEASE</spring-boot-starter-web.version>
-        <spring-boot-starter-undertow.version>2.0.5.RELEASE</spring-boot-starter-undertow.version>
-        <spring-boot-starter-test.version>2.0.5.RELEASE</spring-boot-starter-test.version>
-        <spring-boot-devtools.version>2.0.5.RELEASE</spring-boot-devtools.version>
-        <spring-boot-configuration-processor.version>2.0.5.RELEASE</spring-boot-configuration-processor.version>
-        <spring-boot-starter-jdbc.version>2.0.5.RELEASE</spring-boot-starter-jdbc.version>
+        <spring-boot-starter-web.version>2.1.0.RELEASE</spring-boot-starter-web.version>
+        <spring-boot-starter-undertow.version>2.1.0.RELEASE</spring-boot-starter-undertow.version>
+        <spring-boot-starter-aop.version>2.1.0.RELEASE</spring-boot-starter-aop.version>
+        <spring-boot-starter-test.version>2.1.0.RELEASE</spring-boot-starter-test.version>
+        <spring-boot-devtools.version>2.1.0.RELEASE</spring-boot-devtools.version>
+        <spring-boot-configuration-processor.version>2.1.0.RELEASE</spring-boot-configuration-processor.version>
+        <spring-boot-starter-amqp.version>2.1.0.RELEASE</spring-boot-starter-amqp.version>
+        <spring-boot-starter-jdbc.version>2.1.0.RELEASE</spring-boot-starter-jdbc.version>
         <spring-security-web.version>5.0.6.RELEASE</spring-security-web.version>
         <commons-beanutils.version>1.9.3</commons-beanutils.version>
         <commons-io.version>2.6</commons-io.version>
@@ -43,7 +45,8 @@
         <springfox-swagger-ui.version>2.9.2</springfox-swagger-ui.version>
         <fastjson.version>1.2.47</fastjson.version>
         <aspectjweaver.version>1.9.1</aspectjweaver.version>
-        <spring-kafka.version>2.1.8.RELEASE</spring-kafka.version>
+        <spring-kafka.version>2.2.0.RELEASE</spring-kafka.version>
+        <rocketmq-client.version>4.3.2</rocketmq-client.version>
         <guava.version>25.1-jre</guava.version>
         <jest.version>6.3.0</jest.version>
         <jna.version>4.5.2</jna.version>
@@ -63,7 +66,7 @@
         <!--被继承的父项目的构件标识符-->
         <artifactId>spring-boot-starter-parent</artifactId>
         <!--被继承的父项目的版本-->
-        <version>2.0.5.RELEASE</version>
+        <version>2.1.0.RELEASE</version>
         <!--父项目的pom.xml文件的相对路径。相对路径允许你选择一个不同的路径。默认值是../pom.xml。
             Maven首先在构建当前项目的地方寻找父项目的pom，其次在文件系统的这个位置（relativePath位置），
             然后在本地仓库，最后在远程仓库寻找父项目的pom。-->
@@ -163,13 +166,47 @@
             <optional>true</optional>
         </dependency>
 
+        <!-- aop框架 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+            <version>${spring-boot-starter-aop.version}</version>
+        </dependency>
+        <!--
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <version>${aspectjweaver.version}</version>
+        </dependency>
+        -->
 
+        <!-- AMQP -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-amqp</artifactId>
+            <version>${spring-boot-starter-amqp.version}</version>
+        </dependency>
+
+        <!-- spring kafka 消息 -->
+        <dependency>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka</artifactId>
+            <version>${spring-kafka.version}</version>
+        </dependency>
+
+        <!-- Rocket MQ -->
+        <dependency>
+            <groupId>org.apache.rocketmq</groupId>
+            <artifactId>rocketmq-client</artifactId>
+            <version>${rocketmq-client.version}</version>
+        </dependency>
+
+        <!-- jdbc -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-jdbc</artifactId>
             <version>${spring-boot-starter-jdbc.version}</version>
         </dependency>
-
 
         <!-- Spring安全 -->
         <dependency>
@@ -316,20 +353,6 @@
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
             <version>${fastjson.version}</version>
-        </dependency>
-
-        <!-- aop框架 -->
-        <dependency>
-            <groupId>org.aspectj</groupId>
-            <artifactId>aspectjweaver</artifactId>
-            <version>${aspectjweaver.version}</version>
-        </dependency>
-
-        <!-- spring kafka 消息 -->
-        <dependency>
-            <groupId>org.springframework.kafka</groupId>
-            <artifactId>spring-kafka</artifactId>
-            <version>${spring-kafka.version}</version>
         </dependency>
 
         <!-- 方便编码，并减少编码错误 -->

@@ -1,4 +1,4 @@
-package com.bookool.myboot.common.enums.response;
+package com.bookool.myboot.common.enums.response.base;
 
 import com.bookool.myboot.common.base.CommonEnum;
 import org.jetbrains.annotations.Contract;
@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 业务执行结果枚举
+ * 业务执行结果枚举，对前端的应答中的 success 项
  *
  * @author Tommy
  */
@@ -20,7 +20,7 @@ public enum BussinessEnum implements CommonEnum<Integer> {
     /**
      * 业务成功
      */
-    SUCCESS(1, "失败");
+    SUCCESS(1, "成功");
 
     private final int code;
 

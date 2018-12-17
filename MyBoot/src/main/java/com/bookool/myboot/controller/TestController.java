@@ -1,50 +1,52 @@
 package com.bookool.myboot.controller;
 
 import com.bookool.myboot.common.base.BaseController;
-import com.bookool.myboot.common.base.JwtHandler;
 import com.bookool.myboot.common.base.SnowflakeIdHandler;
-import com.bookool.myboot.common.enums.response.CommonCodeEnum;
+import com.bookool.myboot.common.enums.response.base.CommonResponseEnum;
+import com.bookool.myboot.common.token.user.TokenVerify;
+import com.bookool.myboot.common.token.user.UserTokenHandler;
 import com.bookool.myboot.common.utils.CachedBeanCopier;
 import com.bookool.myboot.domain.dto.result.UserBaseResult;
 import com.bookool.myboot.domain.entity.UserBase;
+import com.google.common.collect.ImmutableMap;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
-import java.math.BigDecimal;
 import java.util.*;
 
+import static com.bookool.myboot.common.token.user.ActionEnum.SKIP;
+
 /**
+ * 一些方法测试
+ *
  * @author Tommy
- * @date 2018-08-05
  */
 @RestController
 @RequestMapping("/test/")
 public class TestController extends BaseController {
 
-    private static Logger log = LoggerFactory.getLogger(TestController.class);
+    private Logger log = LoggerFactory.getLogger(TestController.class);
 
+    @TokenVerify(SKIP)
     @RequestMapping(value = "/getjwttest", method = RequestMethod.POST)
     public Map getJwtTest() {
-        Map<String, Object> jwt = new HashMap<>(1);
-        jwt.put("userid", 1234567890);
-        Map<String, Object> remap = new HashMap<>(1);
-        remap.put("jwt", JwtHandler.createToken(jwt));
-        return successJsonMsg(CommonCodeEnum.SUCCESS, remap);
+        return successJsonMsg(CommonResponseEnum.SUCCESS, ImmutableMap.of(
+                "userid", 1234567890,
+                "jwt", UserTokenHandler.createToken(1234567890L)));
     }
 
+    @TokenVerify(SKIP)
     @RequestMapping(value = "/getsnowtest", method = RequestMethod.POST)
     public Map getSnowTest() {
-        Map<String, Object> remap = new HashMap<>(3);
         TestSnowClass tClass = new TestSnowClass();
         tClass.ths = new Thread[100];
-        for (int i = 0; i< 100; i++) {
+        for (int i = 0; i < 100; i++) {
             tClass.ths[i] = new Thread(() -> tClass.runSnowTest());
             tClass.ths[i].start();
         }
-        for (int i = 0; i< 100; i++) {
+        for (int i = 0; i < 100; i++) {
             while (tClass.ths[i].getState() == Thread.State.BLOCKED) {
                 Thread.yield();
             }
@@ -53,16 +55,17 @@ public class TestController extends BaseController {
             tClass.runStart = true;
             tClass.tSnow.notifyAll();
         }
-        for (int i = 0; i< 100; i++) {
+        for (int i = 0; i < 100; i++) {
             try {
                 tClass.ths[i].join();
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        remap.put("idscount", tClass.tSnow.size());
-        remap.put("ids", tClass.tSnow);
-        return successJsonMsg(remap);
+        return successJsonMsg(ImmutableMap.of(
+                "idscount", tClass.tSnow.size(),
+                "ids", tClass.tSnow
+        ));
     }
 
     private class TestSnowClass {
@@ -86,6 +89,7 @@ public class TestController extends BaseController {
         }
     }
 
+    @TokenVerify(SKIP)
     @ApiOperation("测试日志")
     @RequestMapping(value = "/testlog", method = RequestMethod.POST)
     public Map testLog() {
@@ -94,10 +98,10 @@ public class TestController extends BaseController {
         log.info("测试日志：level=info");
         log.warn("测试日志：level=warn");
         log.error("测试日志：level=error");
-        Map<String, Object> remap = new HashMap<>(0);
-        return successJsonMsg(remap);
+        return successJsonMsg(ImmutableMap.of());
     }
 
+    @TokenVerify(SKIP)
     @ApiOperation("测试Bean拷贝器")
     @RequestMapping(value = "/testcopier", method = RequestMethod.POST)
     public Map testCopier() {
@@ -106,9 +110,7 @@ public class TestController extends BaseController {
         ub.setEmail("Email");
         ub.setMobile("Mobile");
         UserBaseResult ubr = CachedBeanCopier.copyToNew(ub, UserBaseResult.class);
-        Map<String, Object> remap = new HashMap<>(0);
-        remap.put("user", ubr);
-        return successJsonMsg(remap);
+        return successJsonMsg(ImmutableMap.of("user", ubr));
     }
 
 }

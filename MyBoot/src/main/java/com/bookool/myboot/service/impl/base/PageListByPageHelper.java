@@ -12,7 +12,11 @@ import java.util.List;
 import java.util.function.Function;
 
 /**
- * 分页数据列表通过pagehelper获得
+ * 通过 pagehelper 处理一个分页数据请求，通过PageList接口返回分页数据
+ * 对于记录数不超过百万的数据表，可使用此方法进行分页
+ * 如分页效率低下，必须改用 PageListByCustom 以提高效率
+ * 使用此方法，必须先实现一个获取列表的方法
+ * 具体使用可搜索 getListPageByPageHelper 方法，很简单
  *
  * @param <R> 返回结果类型
  * @author Tommy
@@ -20,10 +24,10 @@ import java.util.function.Function;
 public class PageListByPageHelper<T extends BaseParam, R extends BaseResult> extends BasePageList<R> {
 
     /**
-     * 创建分页列表对象，通过pagehelper获得
+     * 通过 pagehelper 创建分页列表对象，使用时通过此方法创建一个 PageList 接口对象返回
      *
      * @param param        条件对象
-     * @param listFunction 获取符合条件的记录列表
+     * @param listFunction 获取符合条件的记录列表的方法
      */
     public PageListByPageHelper(T param, Function<PageListParam<T>, List<R>> listFunction) {
         Preconditions.checkNotNull(param);

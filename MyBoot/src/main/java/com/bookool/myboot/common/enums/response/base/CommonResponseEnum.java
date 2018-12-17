@@ -1,22 +1,26 @@
-package com.bookool.myboot.common.enums.response;
+package com.bookool.myboot.common.enums.response.base;
 
-import com.bookool.myboot.common.base.CommonEnum;
 import org.jetbrains.annotations.Contract;
 
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 业务执行结果枚举
+ * 通用的业务执行结果枚举
  *
  * @author Tommy
  */
-public enum CommonCodeEnum implements CommonEnum<Integer> {
+public enum CommonResponseEnum implements ResponseEnum {
 
     /**
      * 操作失败
      */
     FAIL(-1, "操作失败"),
+
+    /**
+     * 还没有登录
+     */
+    NOT_LOGIN(-2, "还没有登录"),
 
     /**
      * 自定义信息
@@ -32,7 +36,7 @@ public enum CommonCodeEnum implements CommonEnum<Integer> {
 
     private final String message;
 
-    CommonCodeEnum(int code, String message) {
+    CommonResponseEnum(int code, String message) {
         this.code = code;
         this.message = message;
     }
@@ -62,7 +66,7 @@ public enum CommonCodeEnum implements CommonEnum<Integer> {
     private static final Map<Integer, String> LOOKUP_MAP = new HashMap<>();
 
     static {
-        for (CommonCodeEnum e : CommonCodeEnum.values()) {
+        for (CommonResponseEnum e : CommonResponseEnum.values()) {
             LOOKUP_MAP.put(e.code, e.message);
         }
     }

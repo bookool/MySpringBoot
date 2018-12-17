@@ -10,10 +10,18 @@ import tk.mybatis.mapper.weekend.Weekend;
 import java.util.Date;
 
 /**
- * Mapper 基类
+ * 所有 Mapper 必须继承此接口，此接口只实现了4个默认方法
+ * 根据阿里开发规范，所有数据表必须实现 id、gmtCreate、gmtModified 三个字段
+ * 这里实现在插入和更新的时候，自动对这三个字段赋值
+ * 本项目所有主键都使用 snowflake 方法生成，不使用数据库自增以及uuid
+ * 其中插入分为两个方法，分别为自动生成主键和不自动生成主键（某些扩展表和主表使用相同主键）
+ * 其中更新也分为两个方法，分别为通过主键更新以及通过 Weekend 传入条件参数
+ * 本类中方法均使用 tk.mapper 的方法实现
+ * 实际开发中遇到插入和更新，必须使用此类中的方法，不允许使用其他方法
  *
- * @param <P> dto传参
  * @param <T> 实体类型
+ * @param <P> dto传参
+ *
  * @author Tommy
  */
 public interface BaseMapper<T extends BaseEntity, P extends BaseParam> extends Mapper<T> {

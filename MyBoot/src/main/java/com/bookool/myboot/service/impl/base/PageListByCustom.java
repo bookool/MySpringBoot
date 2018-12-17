@@ -6,13 +6,15 @@ import com.bookool.myboot.domain.dto.BaseParam;
 import com.bookool.myboot.domain.dto.BaseResult;
 import com.google.common.base.Preconditions;
 
-import javax.validation.constraints.NotNull;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 
 /**
- * 请求分页列表的处理
+ * 通过手写SQL语句，处理一个分页数据请求，通过PageList接口返回分页数据
+ * 对于记录数超过百万的数据表，必须使用此方法进行分页，以提高效率
+ * 使用此方法，必须在 mapper 中手写一个获取列表的方法以及一个获取记录总数的方法
+ * 具体使用可搜索 getListPageByCustom 方法，很简单
  *
  * @param <T> 请求条件类型
  * @param <R> 返回结果类型
@@ -21,11 +23,11 @@ import java.util.function.Function;
 public class PageListByCustom<T extends BaseParam, R extends BaseResult> extends BasePageList<R> {
 
     /**
-     * 创建分页列表对象
+     * 通过手写SQL语句创建分页列表对象，使用时通过此方法创建一个 PageList 接口对象返回
      *
      * @param param         条件对象
      * @param countFunction 获取符合条件的记录的个数的方法
-     * @param listFunction  获取符合条件的记录列表
+     * @param listFunction  获取符合条件的记录列表的方法
      */
     public PageListByCustom(T param,
                             Function<T, Long> countFunction,

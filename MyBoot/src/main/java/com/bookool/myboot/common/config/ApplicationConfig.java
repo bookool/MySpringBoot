@@ -1,7 +1,7 @@
 package com.bookool.myboot.common.config;
 
-import com.bookool.myboot.common.base.JwtHandler;
 import com.bookool.myboot.common.base.SnowflakeIdHandler;
+import com.bookool.myboot.common.token.user.UserTokenHandler;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
@@ -11,87 +11,87 @@ import org.springframework.stereotype.Component;
  * @author Tommy
  */
 @Component
-@ConfigurationProperties(prefix = "myboot")
+@ConfigurationProperties("myboot")
 public class ApplicationConfig {
     public ApplicationConfig() {
     }
 
     /**
-     * JWT 设置
+     * UserToken 设置
      */
-    private Jwt jwt = new Jwt();
+    private UserToken userToken = new UserToken();
 
     /**
-     * JWT 设置
+     * UserToken 设置
      */
-    public Jwt getJwt() {
-        return this.jwt;
+    public UserToken getUserToken() {
+        return this.userToken;
     }
 
     /**
-     * JWT 设置
+     * UserToken 设置
      */
-    public static class Jwt {
-        Jwt() {
+    public static class UserToken {
+        UserToken() {
         }
 
         /**
-         * jwt密钥
+         * UserToken密钥
          */
         private String secret;
 
         /**
-         * jwt过期时间
+         * UserToken过期时间
          */
         private int expire;
 
         /**
-         * jwt重新颁发时间
+         * UserToken重新颁发时间
          */
         private int renewal;
 
         /**
-         * jwt密钥
+         * UserToken密钥
          */
         public String getSecret() {
             return secret;
         }
 
         /**
-         * jwt密钥
+         * UserToken密钥
          */
         public void setSecret(String secret) {
-            JwtHandler.setSecret(secret);
+            UserTokenHandler.setSecret(secret);
             this.secret = secret;
         }
 
         /**
-         * jwt过期时间
+         * UserToken过期时间
          */
         public int getExpire() {
             return expire;
         }
 
         /**
-         * jwt过期时间
+         * UserToken过期时间
          */
         public void setExpire(int expire) {
-            JwtHandler.setExpire(expire);
+            UserTokenHandler.setExpire(expire);
             this.expire = expire;
         }
 
         /**
-         * jwt重新颁发时间
+         * UserToken重新颁发时间
          */
         public int getRenewal() {
             return renewal;
         }
 
         /**
-         * jwt重新颁发时间
+         * UserToken重新颁发时间
          */
         public void setRenewal(int renewal) {
-            JwtHandler.setRenewal(renewal);
+            UserTokenHandler.setRenewal(renewal);
             this.renewal = renewal;
         }
 

@@ -1,20 +1,22 @@
 package com.bookool.myboot.service;
 
 import com.bookool.myboot.common.base.pageresult.PageList;
+import com.bookool.myboot.common.exception.response.ResponseException;
 import com.bookool.myboot.domain.dto.param.UserBaseParam;
 import com.bookool.myboot.domain.dto.result.UserBaseResult;
-import com.bookool.myboot.domain.entity.UserBase;
-import tk.mybatis.mapper.weekend.Weekend;
-import tk.mybatis.mapper.weekend.WeekendCriteria;
 
+import java.util.Date;
 import java.util.List;
 
 /**
- * UserBaseService
+ * UserBaseService 用户基础信息表 Service
  *
  * @author Tommy
  */
 public interface UserBaseService {
+
+    // #####################以下为自动生成的基础模板代码############################################################
+    //region >>>自动生成的基础模板代码<<<
 
     /**
      * 基础模板 取得符合条件的记录个数
@@ -75,7 +77,7 @@ public interface UserBaseService {
 
     /**
      * 基础模板 编辑 user_base 利用Weekend传递条件参数，此处传主键id
-     * 这是一个例子，主要是演示Weekend条件用法，具体业务请仿照此例子重写
+     * 这是一个例子，主要是演示Weekend条件用法，具体业务请仿照此例子添加新方法
      *
      * @param param 要更新的记录
      * @param id    要更新的主键id值
@@ -90,5 +92,34 @@ public interface UserBaseService {
      * @return 数据库执行完毕影响的行数
      */
     int updateByIdSelective(UserBaseParam param);
+
+    //endregion
+    // ^^^^^^^^^^^^^^^^^^^^^以上为自动生成的基础模板代码^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+    /**
+     * 解开 user token 后，检查用户是否有效
+     *
+     * @param id         userId
+     * @param createTime Token创建时间
+     * @return 用户是否有效
+     */
+    boolean isUserEnable(long id, Date createTime);
+
+    /**
+     * 用户登录
+     *
+     * @param loginName 登录名，可能为手机号码、用户名、用户email
+     * @param password 用户密码
+     * @return 用户Id
+     * @throws ResponseException 用户操作相关异常
+     */
+    long getIdByLoginWithPassword(String loginName, String password) throws ResponseException;
+
+    /**
+     * 通过 id 获取用户信息
+     * @param id 用户id
+     * @return 用户信息
+     */
+    UserBaseResult getUserById(long id);
 
 }

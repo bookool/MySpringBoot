@@ -10,12 +10,15 @@ import org.apache.ibatis.annotations.Mapper;
 import java.util.List;
 
 /**
- * UserBaseMapper
+ * UserBaseMapper 用户基础信息表 Mapper
  *
  * @author Tommy
  */
 @Mapper
 public interface UserBaseMapper extends BaseMapper<UserBase, UserBaseParam> {
+
+    // #####################以下为自动生成的基础模板代码############################################################
+    //region >>>自动生成的基础模板代码<<<
 
     /**
      * 基础模板 取得符合条件的 user_base 的记录个数
@@ -40,5 +43,8 @@ public interface UserBaseMapper extends BaseMapper<UserBase, UserBaseParam> {
      * @return user_base 列表
      */
     List<UserBaseResult> getList(PageListParam param);
+
+    //endregion
+    // ^^^^^^^^^^^^^^^^^^^^^以上为自动生成的基础模板代码^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 }

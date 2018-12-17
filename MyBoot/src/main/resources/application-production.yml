@@ -1,18 +1,23 @@
 myboot:
-  #token
-  jwt:
-    # jwt密钥
+  #UserToken
+  user-token:
+    # UserToken密钥
     secret: 3d990d2276917dfac04467df11fff26d
-    # jwt过期时间
+    # UserToken过期时间
     expire: 30
-    # jwt重新颁发时间
+    # UserToken重新颁发时间
     renewal: 20
+
   #生成唯一id
   snowflake:
     #数据中心id
     datacenterid: 1
     #工作机器id
     workerid: 1
+
+  #Rocketmq
+  rocketmq:
+    namesrv-addr: 192.168.255.100:9876
 
 logging:
   config: classpath:logback-boot-production.xml
@@ -52,3 +57,34 @@ spring:
     restart:
       #是否支持热部署
       enabled: false
+  #AMQP
+  rabbitmq:
+    #rabbitmq连接参数
+    host: 192.168.255.100
+    port: 5672
+    username: myboot
+    password: 123456
+    virtual-host: myboot
+    #开启发送确认
+    publisher-confirms: true
+    #开启发送失败退回
+    publisher-returns: true
+    #开启ACK
+    listener:
+      direct:
+        acknowledge-mode: manual
+      simple:
+        acknowledge-mode: manual
+  #Kafka
+  kafka:
+    bootstrap-servers: 192.168.255.100:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    consumer:
+      group-id: test
+      enable-auto-commit: true
+      # 此处配置方法搜索  java.time.Duration 在 yml properties 中的配置方法
+      auto-commit-interval: PT1S
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer

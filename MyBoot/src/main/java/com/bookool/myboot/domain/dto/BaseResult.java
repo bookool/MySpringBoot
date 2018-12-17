@@ -5,7 +5,9 @@ import lombok.Data;
 import java.util.Date;
 
 /**
- * 结果类传输对象(dto输出)基类
+ * 业务结果对象(输出)基类
+ * 所有输出业务结果对象必须继承
+ * 阿里 java 规范中规定每个数据表中必须包含三个字段： id 、 gmt_create 、 gmt_modified ，在此类中体现
  *
  * @author Tommy
  */

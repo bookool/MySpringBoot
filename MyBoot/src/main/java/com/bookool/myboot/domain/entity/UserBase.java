@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.Table;
+import java.util.Date;
 
 /*
 
@@ -28,11 +29,11 @@ import javax.persistence.Table;
  */
 
 /**
- * UserBase
+ * UserBase 用户基础信息表实体类
  *
  * @author Tommy
  */
-@EqualsAndHashCode(callSuper=true)
+@EqualsAndHashCode(callSuper = true)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -46,7 +47,7 @@ public class UserBase extends BaseEntity {
     private String mobile;
 
     /**
-     * 用户名
+     * 用户名(至少3位,必须包含非数字非符合的字符,不能包含@符)
      */
     @Column(name = "user_name")
     private String userName;
@@ -74,6 +75,12 @@ public class UserBase extends BaseEntity {
      */
     @Column(name = "user_password")
     private String userPassword;
+
+    /**
+     * 用户修改密码的时间
+     */
+    @Column(name = "password_modified")
+    private Date passwordModified;
 
     /**
      * 昵称

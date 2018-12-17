@@ -3,7 +3,8 @@ package com.bookool.myboot.common.base.pageresult;
 import java.util.List;
 
 /**
- * 分页数据列表
+ * 实现了 PageList 接口，同时定义了分页用到的的基本常量
+ * 详情见 PageList 接口
  *
  * @param <R> 结果类型
  * @author Tommy

@@ -1,18 +1,49 @@
 package com.bookool.myboot.common.base;
 
-import com.bookool.myboot.common.enums.response.BussinessEnum;
-import com.bookool.myboot.common.enums.response.CommonCodeEnum;
+import com.bookool.myboot.common.enums.response.base.BussinessEnum;
+import com.bookool.myboot.common.enums.response.base.CommonResponseEnum;
+import com.bookool.myboot.common.enums.response.base.ResponseEnum;
+import com.bookool.myboot.common.token.user.UserTokenHandler;
 import com.google.common.collect.ImmutableMap;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.Map;
 
 /**
- * Controller通用方法
+ * Controller 通用方法
+ * 所有 Controller 必须继承，主要实现对客户端返回结果的封装
+ * 参看项目内《业务结果代码范围控制》
  *
  * @author Tommy
  */
 public abstract class BaseController {
+
+    /**
+     * 返回key：是否成功
+     */
+    private static final String RESULT_KEY_SUCCESS = "success";
+
+    /**
+     * 返回key：业务结果代码
+     */
+    private static final String RESULT_KEY_CODE = "code";
+
+    /**
+     * 返回key：业务信息
+     */
+    private static final String RESULT_KEY_MESSAGE = "message";
+
+    /**
+     * 返回key：业务数据
+     */
+    private static final String RESULT_KEY_DATA = "data";
+
+    /**
+     * 返回key：颁发token
+     */
+    private static final String RESULT_KEY_TOKEN = "token";
+
 
     /**
      * 返回操作成功，自定义信息，无数据
@@ -44,7 +75,7 @@ public abstract class BaseController {
      * @author Tommy
      */
     protected static Map successJsonMsg() {
-        return getJsonMsg(BussinessEnum.SUCCESS, CommonCodeEnum.SUCCESS, null);
+        return getJsonMsg(BussinessEnum.SUCCESS, CommonResponseEnum.SUCCESS, null);
     }
 
     /**
@@ -55,7 +86,7 @@ public abstract class BaseController {
      * @author Tommy
      */
     protected static Map successJsonMsg(Map data) {
-        return getJsonMsg(BussinessEnum.SUCCESS, CommonCodeEnum.SUCCESS, data);
+        return getJsonMsg(BussinessEnum.SUCCESS, CommonResponseEnum.SUCCESS, data);
     }
 
     /**
@@ -65,7 +96,7 @@ public abstract class BaseController {
      * @return 返回Json包
      * @author Tommy
      */
-    protected static Map successJsonMsg(CommonCodeEnum codeEnum) {
+    protected static Map successJsonMsg(ResponseEnum codeEnum) {
         return getJsonMsg(BussinessEnum.SUCCESS, codeEnum, null);
     }
 
@@ -77,7 +108,7 @@ public abstract class BaseController {
      * @return 返回Json包
      * @author Tommy
      */
-    protected static Map successJsonMsg(CommonCodeEnum codeEnum, Map data) {
+    protected static Map successJsonMsg(ResponseEnum codeEnum, Map data) {
         return getJsonMsg(BussinessEnum.SUCCESS, codeEnum, data);
     }
 
@@ -111,7 +142,7 @@ public abstract class BaseController {
      * @author Tommy
      */
     protected static Map failJsonMsg() {
-        return getJsonMsg(BussinessEnum.FAIL, CommonCodeEnum.FAIL, null);
+        return getJsonMsg(BussinessEnum.FAIL, CommonResponseEnum.FAIL, null);
     }
 
     /**
@@ -122,7 +153,7 @@ public abstract class BaseController {
      * @author Tommy
      */
     protected static Map failJsonMsg(Map data) {
-        return getJsonMsg(BussinessEnum.FAIL, CommonCodeEnum.FAIL, data);
+        return getJsonMsg(BussinessEnum.FAIL, CommonResponseEnum.FAIL, data);
     }
 
     /**
@@ -132,7 +163,7 @@ public abstract class BaseController {
      * @return 返回Json包
      * @author Tommy
      */
-    protected static Map failJsonMsg(CommonCodeEnum codeEnum) {
+    protected static Map failJsonMsg(ResponseEnum codeEnum) {
         return getJsonMsg(BussinessEnum.FAIL, codeEnum, null);
     }
 
@@ -144,8 +175,22 @@ public abstract class BaseController {
      * @return 返回Json包
      * @author Tommy
      */
-    protected static Map failJsonMsg(CommonCodeEnum codeEnum, Map data) {
+    protected static Map failJsonMsg(ResponseEnum codeEnum, Map data) {
         return getJsonMsg(BussinessEnum.FAIL, codeEnum, data);
+    }
+
+    /**
+     * 向输出结果集中添加 user token 信息
+     * @param jsonMsg 输出结果集
+     * @param userId 用户id
+     */
+    protected static Map addTokenToJsonMsg(Map jsonMsg, long userId) {
+        return ImmutableMap.of(RESULT_KEY_SUCCESS, jsonMsg.get(RESULT_KEY_SUCCESS),
+                RESULT_KEY_CODE, jsonMsg.get(RESULT_KEY_CODE),
+                RESULT_KEY_MESSAGE, jsonMsg.get(RESULT_KEY_MESSAGE),
+                RESULT_KEY_DATA, jsonMsg.get(RESULT_KEY_DATA),
+                RESULT_KEY_TOKEN, UserTokenHandler.createToken(userId)
+        );
     }
 
     // -----------------------------------------------------------------------------
@@ -159,11 +204,11 @@ public abstract class BaseController {
      * @return 返回Json包
      * @author Tommy
      */
-    private static Map getJsonMsg(BussinessEnum successEnum, String msg, Map data) {
-        return ImmutableMap.of("success", successEnum.code(),
-                "code", CommonCodeEnum.CUSTOM.code(),
-                "message", msg,
-                "data", data == null ? Collections.emptyMap() : data
+    private static Map getJsonMsg(@NotNull BussinessEnum successEnum, String msg, Map data) {
+        return ImmutableMap.of(RESULT_KEY_SUCCESS, successEnum.code(),
+                RESULT_KEY_CODE, CommonResponseEnum.CUSTOM.code(),
+                RESULT_KEY_MESSAGE, msg,
+                RESULT_KEY_DATA, data == null ? Collections.emptyMap() : data
         );
     }
 
@@ -176,28 +221,11 @@ public abstract class BaseController {
      * @return 返回Json包
      * @author Tommy
      */
-    private static Map getJsonMsg(BussinessEnum successEnum, CommonCodeEnum codeEnum, Map data) {
-        return ImmutableMap.of("success", successEnum.code(),
-                "code", codeEnum.code(),
-                "message", codeEnum.message(),
-                "data", data == null ? Collections.emptyMap() : data
-        );
-    }
-
-    /**
-     * 包装返回数据，返回预定义代码信息，不返回字符信息
-     *
-     * @param successEnum 业务结果枚举
-     * @param codeEnum    返回业务代码枚举
-     * @param data        返回数据
-     * @return 返回Json包
-     * @author Tommy
-     */
-    private static Map getJsonMsg(BussinessEnum successEnum, CommonEnum codeEnum, Map data) {
-        return ImmutableMap.of("success", successEnum.code(),
-                "code", codeEnum.code(),
-                "message", codeEnum.message(),
-                "data", data == null ? Collections.emptyMap() : data
+    private static Map getJsonMsg(@NotNull BussinessEnum successEnum, @NotNull ResponseEnum codeEnum, Map data) {
+        return ImmutableMap.of(RESULT_KEY_SUCCESS, successEnum.code(),
+                RESULT_KEY_CODE, codeEnum.code(),
+                RESULT_KEY_MESSAGE, codeEnum.message(),
+                RESULT_KEY_DATA, data == null ? Collections.emptyMap() : data
         );
     }
 

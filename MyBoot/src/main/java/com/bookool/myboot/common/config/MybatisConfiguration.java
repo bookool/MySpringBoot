@@ -13,7 +13,6 @@ import java.util.Properties;
  * Mybatis配置
  *
  * @author Tommy
- * @date
  */
 @Configuration
 @EnableAutoConfiguration

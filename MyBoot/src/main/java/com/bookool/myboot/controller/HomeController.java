@@ -1,17 +1,17 @@
 package com.bookool.myboot.controller;
 
-import org.springframework.stereotype.Controller;
+import com.bookool.myboot.common.base.BaseController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
+ * 接口根路径
+ *
  * @author Tommy
- * @date 2018-08-05
  */
 @RestController
-public class HomeController {
+public class HomeController extends BaseController {
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String home() {
         return "Hello World!";
