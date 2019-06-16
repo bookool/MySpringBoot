@@ -17,6 +17,10 @@ import java.util.Date;
 @Data
 public abstract class BaseParam {
 
+    protected BaseParam() {
+        pageParam = new PageParam();
+    }
+
     /**
      * id
      */
@@ -33,13 +37,8 @@ public abstract class BaseParam {
     private Date gmtModified;
 
     /**
-     * 请求的页码
+     * 分页参数
      */
-    Integer pageNum;
-
-    /**
-     * 请求的每页数量
-     */
-    Integer pageSize;
+    private PageParam pageParam;
 
 }

@@ -23,6 +23,11 @@ public enum CommonResponseEnum implements ResponseEnum {
     NOT_LOGIN(-2, "还没有登录"),
 
     /**
+     * 添加或更新的信息有重复
+     */
+    DATA_DUPLICATE(-101, "添加或更新的信息有重复"),
+
+    /**
      * 自定义信息
      */
     CUSTOM(0, ""),

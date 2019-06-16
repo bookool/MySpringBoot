@@ -1,100 +1,113 @@
 package com.bookool.myboot.service;
 
+import com.bookool.myboot.common.base.fastpageresult.FastPageList;
 import com.bookool.myboot.common.base.pageresult.PageList;
 import com.bookool.myboot.common.exception.response.ResponseException;
-import com.bookool.myboot.domain.dto.param.UserBaseParam;
-import com.bookool.myboot.domain.dto.result.UserBaseResult;
+import com.bookool.myboot.domain.dto.param.UserParam;
+import com.bookool.myboot.domain.dto.result.UserResult;
 
 import java.util.Date;
 import java.util.List;
 
 /**
- * UserBaseService 用户基础信息表 Service
+ * UserService 用户基础信息表 Service
  *
  * @author Tommy
+ * @date 2019-05-25 18:36:33
  */
-public interface UserBaseService {
+public interface UserService {
 
     // #####################以下为自动生成的基础模板代码############################################################
-    //region >>>自动生成的基础模板代码<<<
 
     /**
      * 基础模板 取得符合条件的记录个数
      *
-     * @param param 条件dto
+     * @param userParam 查询条件对象
      * @return 符合条件的记录个数
      */
-    Long getListCount(UserBaseParam param);
+    long getListCount(UserParam userParam);
 
     /**
      * 基础模板 取得符合条件的记录列表
      *
-     * @param param 条件dto
+     * @param userParam 查询条件对象
      * @return 符合条件的记录列表
      */
-    List<UserBaseResult> getList(UserBaseParam param);
+    List<UserResult> getList(UserParam userParam);
 
     /**
-     * 基础模板 取得 user_base 分页列表
+     * 基础模板 取得 User 分页列表
      *
-     * @param param 条件dto
+     * @param userParam 查询条件对象
      * @return 分页列表对象
      */
-    PageList<UserBaseResult> getListPageByCustom(UserBaseParam param);
+    PageList<UserResult> getListPageByCustom(UserParam userParam);
 
     /**
-     * 基础模板 取得 user_base 分页列表，通过 PageHelper
+     * 基础模板 取得 User 分页列表，通过 PageHelper
      *
-     * @param param 条件dto
+     * @param userParam 查询条件对象
      * @return 分页列表对象
      */
-    PageList<UserBaseResult> getListPageByPageHelper(UserBaseParam param);
+    PageList<UserResult> getListPageByPageHelper(UserParam userParam);
 
     /**
-     * 基础模板 添加 user_base
+     * 基础模板 取得 User 快速更新分页列表
+     *
+     * @param userParam 查询条件对象
+     * @return 分页列表对象
+     */
+    FastPageList<UserResult> getListFastPage(UserParam userParam);
+
+    /**
+     * 基础模板 添加 User
      * 本项目不使用数据库自增字段，因此避免使用任何与自增相关的方法
      * 本项目必须使用snowflakeId生产全局ID
      * 此方法自动生成 id、gmtCreate、gmtModified
      * 传入的添加对象应该确保 id、gmtCreate、gmtModified 为空
      *
-     * @param param 要添加的对象
+     * @param userParam 要添加的对象
      * @return 影响行数
+     * @throws ResponseException 传递异常
      */
-    int insertSelective(UserBaseParam param);
+    int insertSelective(UserParam userParam) throws ResponseException;
 
     /**
-     * 基础模板 添加 user_base
+     * 基础模板 添加 User
      * 本项目不使用数据库自增字段，因此避免使用任何与自增相关的方法
      * 本项目必须使用snowflakeId生产全局ID
      * 此方法要求传入主键 id 值，自动生成 gmtCreate、gmtModified
      * 使用场景：对于某类信息的扩展表，主键id和主表的id保持一致，则不用生成id，直接拿主表id值来添加
      * 传入的添加对象应该确保 id 有值，gmtCreate、gmtModified 为空
      *
-     * @param param 要添加的对象
+     * @param userParam 要添加的对象
      * @return 影响行数
+     * @throws ResponseException 传递异常
      */
-    int insertWithIdSelective(UserBaseParam param);
+    int insertWithIdSelective(UserParam userParam) throws ResponseException;
 
     /**
-     * 基础模板 编辑 user_base 利用Weekend传递条件参数，此处传主键id
+     * 基础模板 编辑 User 利用Weekend传递条件参数，此处传主键id
      * 这是一个例子，主要是演示Weekend条件用法，具体业务请仿照此例子添加新方法
      *
-     * @param param 要更新的记录
+     * @param userParam 要更新的记录
      * @param id    要更新的主键id值
      * @return 数据库执行完毕影响的行数
+     * @throws ResponseException 传递异常
      */
-    int updateSelective(UserBaseParam param, long id);
+    int updateSelective(UserParam userParam, long id) throws ResponseException;
 
     /**
-     * 基础模板 编辑 user_base 通过主键id，id直接包含在传参对象内
+     * 基础模板 编辑 User 通过主键id，id直接包含在传参对象内
      *
-     * @param param 要更新的记录
+     * @param userParam 要更新的记录
      * @return 数据库执行完毕影响的行数
+     * @throws ResponseException 传递异常
      */
-    int updateByIdSelective(UserBaseParam param);
+    int updateByIdSelective(UserParam userParam) throws ResponseException;
 
-    //endregion
     // ^^^^^^^^^^^^^^^^^^^^^以上为自动生成的基础模板代码^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 
     /**
      * 解开 user token 后，检查用户是否有效
@@ -120,6 +133,6 @@ public interface UserBaseService {
      * @param id 用户id
      * @return 用户信息
      */
-    UserBaseResult getUserById(long id);
+    UserResult getUserById(long id);
 
 }

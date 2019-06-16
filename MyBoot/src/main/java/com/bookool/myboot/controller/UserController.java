@@ -1,14 +1,16 @@
 package com.bookool.myboot.controller;
 
 import com.bookool.myboot.common.base.BaseController;
+import com.bookool.myboot.common.base.fastpageresult.FastPageList;
 import com.bookool.myboot.common.base.pageresult.PageList;
 import com.bookool.myboot.common.enums.response.UserResponseEnum;
+import com.bookool.myboot.common.enums.response.base.CommonResponseEnum;
 import com.bookool.myboot.common.exception.response.ResponseException;
 import com.bookool.myboot.common.token.user.TokenVerify;
-import com.bookool.myboot.domain.dto.param.UserBaseParam;
-import com.bookool.myboot.domain.dto.result.UserBaseResult;
-import com.bookool.myboot.service.UserBaseService;
 
+import com.bookool.myboot.domain.dto.param.UserParam;
+import com.bookool.myboot.domain.dto.result.UserResult;
+import com.bookool.myboot.service.UserService;
 import com.google.common.collect.ImmutableMap;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -36,14 +38,14 @@ import static com.bookool.myboot.common.token.user.UserTokenHandler.REQUEST_ATTR
 public class UserController extends BaseController {
 
     @Resource
-    UserBaseService userBaseService;
+    UserService userService;
 
     @ApiOperation("获取用户列表，测试ListPageByCustom")
     @RequestMapping(value = "/getuserlistbycustom", method = RequestMethod.POST)
     @TokenVerify(SKIP)
     public Map getUserListByCustom(@ApiParam(name = "user", value = "查询条件", required = true)
-                                   @RequestBody UserBaseParam user) {
-        PageList<UserBaseResult> userPage = userBaseService.getListPageByCustom(user);
+                                   @RequestBody UserParam user) {
+        PageList<UserResult> userPage = userService.getListPageByCustom(user);
         return successJsonMsg(ImmutableMap.of("users", userPage));
     }
 
@@ -51,8 +53,17 @@ public class UserController extends BaseController {
     @RequestMapping(value = "/getuserlistbypagehelper", method = RequestMethod.POST)
     @TokenVerify(SKIP)
     public Map getUserListByPageHelper(@ApiParam(name = "user", value = "查询条件", required = true)
-                                       @RequestBody UserBaseParam user) {
-        PageList<UserBaseResult> userPage = userBaseService.getListPageByPageHelper(user);
+                                       @RequestBody UserParam user) {
+        PageList<UserResult> userPage = userService.getListPageByPageHelper(user);
+        return successJsonMsg(ImmutableMap.of("users", userPage));
+    }
+
+    @ApiOperation("获取用户列表，测试FastListPage")
+    @RequestMapping(value = "/getuserlistbyfastpage", method = RequestMethod.POST)
+    @TokenVerify(SKIP)
+    public Map getUserListByFastPage(@ApiParam(name = "user", value = "查询条件", required = true)
+                                       @RequestBody UserParam user) {
+        FastPageList<UserResult> userPage = userService.getListFastPage(user);
         return successJsonMsg(ImmutableMap.of("users", userPage));
     }
 
@@ -60,9 +71,9 @@ public class UserController extends BaseController {
     @RequestMapping(value = "/getuserlist", method = RequestMethod.POST)
     @TokenVerify(SKIP)
     public Map getUserList(@ApiParam(name = "user", value = "查询条件", required = true)
-                           @RequestBody UserBaseParam user) {
-        Long count = userBaseService.getListCount(user);
-        List<UserBaseResult> userList = userBaseService.getList(user);
+                           @RequestBody UserParam user) {
+        Long count = userService.getListCount(user);
+        List<UserResult> userList = userService.getList(user);
         return successJsonMsg(ImmutableMap.of(
                 "count", count,
                 "users", userList
@@ -73,15 +84,19 @@ public class UserController extends BaseController {
     @RequestMapping(value = "/insertuser", method = RequestMethod.POST)
     @TokenVerify(SKIP)
     public Map insertUser(@ApiParam(name = "user", value = "用户信息", required = true)
-                          @RequestBody UserBaseParam user) {
+                          @RequestBody UserParam user) {
         user.setId(null);
         user.setGmtCreate(null);
         user.setGmtModified(null);
         user.setPasswordModified(new Date());
-        if (userBaseService.insertSelective(user) == 1) {
-            return successJsonMsg();
-        } else {
-            return failJsonMsg();
+        try {
+            if (userService.insertSelective(user) == 1) {
+                return successJsonMsg();
+            } else {
+                return failJsonMsg();
+            }
+        } catch (ResponseException ex) {
+            return failJsonMsg(ex.getResponseEnum());
         }
     }
 
@@ -89,15 +104,19 @@ public class UserController extends BaseController {
     @RequestMapping(value = "/updateuser", method = RequestMethod.POST)
     @TokenVerify(SKIP)
     public Map updateUser(@ApiParam(name = "user", value = "用户信息", required = true)
-                          @RequestBody UserBaseParam user) {
+                          @RequestBody UserParam user) {
         long id = user.getId();
         user.setId(null);
         user.setGmtCreate(null);
         user.setGmtModified(null);
-        if (userBaseService.updateSelective(user, id) == 1) {
-            return successJsonMsg();
-        } else {
-            return failJsonMsg();
+        try {
+            if (userService.updateSelective(user, id) == 1) {
+                return successJsonMsg();
+            } else {
+                return failJsonMsg();
+            }
+        } catch (ResponseException ex) {
+            return failJsonMsg(CommonResponseEnum.DATA_DUPLICATE);
         }
     }
 
@@ -110,7 +129,7 @@ public class UserController extends BaseController {
                          @RequestParam(value = "password") String password) {
         long id;
         try {
-            id = userBaseService.getIdByLoginWithPassword(loginName, password);
+            id = userService.getIdByLoginWithPassword(loginName, password);
         } catch (ResponseException e) {
             return failJsonMsg(e.getResponseEnum());
         }
@@ -126,7 +145,7 @@ public class UserController extends BaseController {
     public Map getInfo(HttpServletRequest request) {
         long id = (long) request.getAttribute(REQUEST_ATTRIBUTE_KEY);
         return successJsonMsg(ImmutableMap.of(
-                "userInfo", userBaseService.getUserById(id)));
+                "userInfo", userService.getUserById(id)));
     }
 
 }

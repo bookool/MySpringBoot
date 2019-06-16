@@ -112,6 +112,7 @@
                     <include>application-${profileActive}.yml</include>
                     <include>com/**</include>
                     <include>*.xml</include>
+                    <include>*.json</include>
                     <!--<include>*.json</include>-->
                     <!--<include>*.properties</include>-->
                     <!--<include>*.txt</include>-->

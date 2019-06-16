@@ -8,27 +8,27 @@ import java.util.Map;
 
 /**
  * 用户状态枚举
- * 此枚举值对应数据库 user_base 表中的 user_state 字段
+ * 此枚举值对应数据库 user 表中的 user_state 字段
  * 数据库中所有状态字段都应建立枚举对应
  *
  * @author Tommy
  */
-public enum UserStateEnum implements CommonEnum<Short> {
+public enum UserStateEnum implements CommonEnum<Integer> {
     /**
      * 用户无效
      */
-    DISABLE((short) 0, "无效"),
+    DISABLE(0, "无效"),
 
     /**
      * 用户有效
      */
-    ENABLE((short) 1, "有效");
+    ENABLE(1, "有效");
 
-    private final short code;
+    private final Integer code;
 
     private final String message;
 
-    UserStateEnum(short code, String message) {
+    UserStateEnum(Integer code, String message) {
         this.code = code;
         this.message = message;
     }
@@ -40,7 +40,7 @@ public enum UserStateEnum implements CommonEnum<Short> {
      */
     @Contract(pure = true)
     @Override
-    public Short code() {
+    public Integer code() {
         return code;
     }
 
@@ -55,7 +55,7 @@ public enum UserStateEnum implements CommonEnum<Short> {
         return message;
     }
 
-    private static final Map<Short, String> LOOKUP_MAP = new HashMap<>();
+    private static final Map<Integer, String> LOOKUP_MAP = new HashMap<>();
 
     static {
         for (UserStateEnum e : UserStateEnum.values()) {
@@ -69,7 +69,7 @@ public enum UserStateEnum implements CommonEnum<Short> {
      * @param code 枚举代码
      * @return 枚举信息
      */
-    public static String getMessateByCode(short code) {
+    public static String getMessateByCode(Integer code) {
         return LOOKUP_MAP.get(code);
     }
 

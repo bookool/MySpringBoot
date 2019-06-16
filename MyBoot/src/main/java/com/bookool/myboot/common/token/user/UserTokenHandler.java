@@ -1,7 +1,7 @@
 package com.bookool.myboot.common.token.user;
 
 import com.bookool.myboot.common.token.JwtHandler;
-import com.bookool.myboot.service.UserBaseService;
+import com.bookool.myboot.service.UserService;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -23,14 +23,14 @@ import java.util.Map;
 @Component
 public class UserTokenHandler {
 
-    private static UserBaseService userBaseService;
+    private static UserService userService;
 
     /**
      * 通过setter方法注入
      */
     @Resource
-    public void setUserBaseService(UserBaseService userBaseService) {
-        UserTokenHandler.userBaseService = userBaseService;
+    public void setUserService(UserService userService) {
+        UserTokenHandler.userService = userService;
     }
 
     /**
@@ -111,7 +111,7 @@ public class UserTokenHandler {
                     long iat = (long) getvalue.get(JwtHandler.KEY_IAT);
                     Date iatDate = new Date(iat);
                     // 检查用户是否有效，只有在有效的情况下返回Pair，其余情况均返回null
-                    if (userBaseService.isUserEnable(userId, iatDate)) {
+                    if (userService.isUserEnable(userId, iatDate)) {
                         long renew = renewal * DAY_MILLIS + iat;
                         return Pair.of(userId, System.currentTimeMillis() > renew);
                     }

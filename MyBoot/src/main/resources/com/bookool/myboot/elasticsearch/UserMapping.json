@@ -1,0 +1,49 @@
+{
+  "properties": {
+    "id": {
+      "type": "keyword"
+    },
+    "gmtCreate": {
+      "type": "date"
+    },
+    "gmtModified": {
+      "type": "date"
+    },
+    "mobile": {
+      "type": "keyword"
+    },
+    "userName": {
+      "type": "text",
+      "analyzer": "ik_max_word",
+      "search_analyzer": "ik_max_word"
+    },
+    "email": {
+      "type": "keyword"
+    },
+    "wxOpenid": {
+      "type": "keyword"
+    },
+    "wxUnionid": {
+      "type": "keyword"
+    },
+    "passwordModified": {
+      "type": "date"
+    },
+    "nickName": {
+      "type": "text",
+      "analyzer": "ik_max_word",
+      "search_analyzer": "ik_max_word"
+    },
+    "userState": {
+      "type": "short"
+    },
+    "userStatus": {
+      "type": "short"
+    },
+    "remark": {
+      "type": "text",
+      "analyzer": "ik_max_word",
+      "search_analyzer": "ik_max_word"
+    }
+  }
+}

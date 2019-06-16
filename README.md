@@ -1,7 +1,7 @@
 #  **MySpringBoot** 
 
 ## 项目介绍
-Spring Boot 2.1 的典型项目框架，主要应用在网站或移动App的服务端。  
+Spring Boot 2 的典型项目框架，主要应用在网站或移动App的服务端。  
 涉及到的技术包括 Spring Boot、mybatis、swagger、logback、tk.mapper、pagehelper、RabbitMq、kafka、RocketMq、JWT、Snowflake等。  
 项目有完整详细的使用说明、代码注释以及环境搭建说明。  
 
@@ -65,19 +65,11 @@ docker-compose配置：
 
 ### Rocket MQ
 Rocket MQ 的 Docker 部署比较麻烦：
-1. 先克隆项目：https://github.com/apache/rocketmq-externals
-2. 修改 rocketmq-externals\rocketmq-docker\4.3.0\rocketmq-broker\Dockerfile 文件，在 sh mqbroker 语句后面加参数，改为： 
-```
-sh mqbroker -c /opt/conf/broker.properties
-```
-这样做可以把配置目录映射出来，便于在docker外配置broker。
-3. 进入 rocketmq-externals\rocketmq-docker\4.3.0\ 目录，执行build命令，建立三个 Docker image：
-```
-docker build -t apache/rocketmq-base:4.3.0 --build-arg version=4.3.0 ./rocketmq-base
-docker build -t apache/rocketmq-namesrv:4.3.0 ./rocketmq-namesrv
-docker build -t apache/rocketmq-broker:4.3.0 ./rocketmq-broker
-```                                                                        
-4. 创建 /work/docker/volumes/rocketmq/broker/conf 文件夹，并添加配置文件 broker.properties ：
+1. 我们需要3个镜像
+* tommyguan/rocketmq-namesrv:4.3.2 ：namesrv服务器，基于官方源码制作；  
+* tommyguan/rocketmq-broker:4.3.2 ：broker服务器，基于官方源码制作，在 sh mqbroker 后面加配置文件参数，便于映射配置文件到宿主机；  
+* styletang/rocketmq-console-ng ：管理平台。  
+2. 创建 /work/docker/volumes/rocketmq/broker/config 文件夹，并添加配置文件 broker.properties ：
 ```
 # 所属集群名字
 # 附加：如果有多个master，那么每个master配置的名字应该一样，要不然识别不了对方，不知道是一个集群内部的
@@ -177,42 +169,45 @@ autoCreateSubscriptionGroup=true
 这里最重要的配置是：brokerIP1=192.168.255.100 ，这里根据服务器的实际访问IP进行配置。 
 如果不配置此项，会导致客户端无法取得正确的 boker 访问地址，而导致消息收发失败。 
 
-5. docker-compose配置，注意是3个容器：
+3. docker-compose配置，注意是3个容器：
 ```
   rocketmq-namesrv:
-    image: apache/rocketmq-namesrv:4.3.0
-    container_name: rmqnamesrv
-    ports:
-      - 9876:9876
-    volumes:
-      - /work/docker/volumes/rocketmq/namesrv/logs:/opt/logs
-      - /work/docker/volumes/rocketmq/namesrv/store:/opt/store
-      - /work/docker/volumes/rocketmq/broker/conf:/opt/conf
-      
-  rocketmq-broker:
-    image: apache/rocketmq-broker:4.3.0
-    container_name: rmqbroker
-    ports:
-      - 10909:10909
-      - 10911:10911
-    volumes:
-      - /work/docker/volumes/rocketmq/broker/logs:/opt/logs
-      - /work/docker/volumes/rocketmq/broker/store:/opt/store
-    environment:
-      NAMESRV_ADDR: "rmqnamesrv:9876"
-      JAVA_OPT: "${JAVA_OPT} -server -Xms512m -Xmx512m -Xmn256m -XX:PermSize=128m -XX:MaxPermSize=128m"
-    links:
-      - rocketmq-namesrv:namesrv
-    depends_on:
-      - rocketmq-namesrv
-      
-  rocketmq-console-ng:
-    image: styletang/rocketmq-console-ng
-    container_name: rmqconsole
-    ports:
-      - 8090:8080
-    environment:
-      JAVA_OPTS: "-Drocketmq.namesrv.addr=192.168.255.100:9876 -Dcom.rocketmq.sendMessageWithVIPChannel=false"
+      image: tommyguan/rocketmq-namesrv:4.3.2
+      container_name: rmqnamesrv
+      restart: unless-stopped
+      ports:
+        - 9876:9876
+      volumes:
+        - /work/docker/volumes/rocketmq/namesrv/logs:/opt/logs
+        - /work/docker/volumes/rocketmq/namesrv/store:/opt/store
+        
+    rocketmq-broker:
+      image: tommyguan/rocketmq-broker:4.3.2
+      container_name: rmqbroker
+      restart: unless-stopped
+      ports:
+        - 10909:10909
+        - 10911:10911
+      volumes:
+        - /work/docker/volumes/rocketmq/broker/logs:/opt/logs
+        - /work/docker/volumes/rocketmq/broker/store:/opt/store
+        - /work/docker/volumes/rocketmq/broker/config:/opt/config
+      environment:
+        NAMESRV_ADDR: "192.168.255.100:9876"
+      links:
+        - rocketmq-namesrv
+      depends_on:
+        - rocketmq-namesrv
+        
+    rocketmq-console-ng:
+      image: styletang/rocketmq-console-ng
+      container_name: rmqconsole
+      restart: unless-stopped
+      ports:
+        - 8090:8080
+      environment:
+        JAVA_OPTS: "-Drocketmq.namesrv.addr=192.168.255.100:9876 -Dcom.rocketmq.sendMessageWithVIPChannel=false"
+
 ```
 注意看上文提到的配置文件目录被映射出来了。  
 容器启动成功之后就可以访问web管理端了：http://宿主机IP:8090
@@ -252,6 +247,12 @@ docker-compose配置：
         ZK_HOSTS: 192.168.255.100
     ports:  
       - 9000:9000
+    links:
+      - zookeeper:zookeeper
+      - kafka:kafka
+    depends_on:
+      - zookeeper
+      - kafka
 ```
 容器启动成功之后就可以访问web管理端了：http://宿主机IP:9000
 

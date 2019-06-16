@@ -77,13 +77,13 @@ public class RequestAspect {
             request.setAttribute(REQUEST_ATTRIBUTE_KEY, userId);
             Map reval = (Map) joinPoint.proceed();
             // 如果需要重新颁发 token
-            if (renewalToken)
-            {
+            if (renewalToken) {
                 // 重新颁发 token
                 reval = BaseController.addTokenToJsonMsg(reval, userId);
             }
             return reval;
         } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
     }

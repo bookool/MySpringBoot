@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 用户基础信息表 -->
+<mapper namespace="com.bookool.myboot.mapper.UserMapper">
+    <resultMap id="ResultMap" type="com.bookool.myboot.domain.dto.result.UserResult">
+        <!-- id -->
+        <id column="id" property="id"/>
+        <!-- 创建时间 -->
+        <result column="gmt_create" property="gmtCreate"/>
+        <!-- 修改时间 -->
+        <result column="gmt_modified" property="gmtModified"/>
+        <!-- 手机号码 -->
+        <result column="mobile" property="mobile"/>
+        <!-- 用户名 -->
+        <result column="user_name" property="userName"/>
+        <!-- 用户密码MD5 -->
+        <result column="user_password" property="userPassword"/>
+        <!-- 用户状态 -->
+        <result column="user_state" property="userState"/>
+        <!-- 用户修改密码的时间 -->
+        <result column="password_modified" property="passwordModified"/>
+    </resultMap>
+
+    <!-- 分页语句 -->
+    <sql id="BaseSqlPage">
+        <!-- 通用分页 -->
+        <if test="pageParam!=null and pageParam.offset!=null and pageParam.rows!=null and pageParam.pageSize!=null">
+            LIMIT #{pageParam.offset}, #{pageParam.rows}
+        </if>
+        <!-- 快速更新分页 -->
+        <if test="pageParam!=null and (pageParam.roundMinId!=null or pageParam.roundMaxId!=null) and pageParam.pageSize!=null">
+            LIMIT #{pageParam.pageSize}
+        </if>
+    </sql>
+
+    <!-- 基础输出字段 -->
+    <sql id="BaseSqlColumnList">
+        `id`
+        , `gmt_create`
+        , `gmt_modified`
+        , mobile
+        , user_name
+        , user_password
+        , user_state
+        , password_modified
+	</sql>
+
+    <!-- 基础输出字段(手动分页专用) -->
+    <sql id="BaseSqlColumnListCustomPage">
+        `ta`.`id`
+        , `ta`.`gmt_create`
+        , `ta`.`gmt_modified`
+        , `ta`.`mobile`
+        , `ta`.`user_name`
+        , `ta`.`user_password`
+        , `ta`.`user_state`
+        , `ta`.`password_modified`
+	</sql>
+
+    <!-- 基础查询条件 -->
+    <sql id="BaseSqlWhere">
+        <trim prefix="WHERE" prefixOverrides="AND|OR">
+            <if test="id!=null">
+                AND `id` = #{id}
+            </if>
+            <if test="mobile!=null">
+                AND `mobile` = #{mobile}
+            </if>
+            <if test="userName!=null">
+                AND `user_name` = #{userName}
+            </if>
+            <if test="userPassword!=null">
+                AND `user_password` = #{userPassword}
+            </if>
+            <if test="userState!=null">
+                AND `user_state` = #{userState}
+            </if>
+            <if test="passwordModified!=null">
+                AND `password_modified` = #{passwordModified}
+            </if>
+            <!-- 快速更新分页,分两段进行查询，先查id大于给定id的部分(用户翻页过程中，新增的部分) -->
+            <if test="pageParam!=null and pageParam.roundMaxId!=null and pageParam.pageSize!=null">
+                AND `id` &gt; #{pageParam.roundMaxId}
+            </if>
+            <!-- 快速更新分页,分两段进行查询，再查id小于给定id的部分 -->
+            <if test="pageParam!=null and pageParam.roundMinId!=null and pageParam.pageSize!=null">
+                AND `id` &lt; #{pageParam.roundMinId}
+            </if>
+        </trim>
+    </sql>
+
+    <!-- 基础模板 取得符合条件的 user 的记录个数 -->
+    <select id="getListCount" resultType="java.lang.Long"
+            parameterType="com.bookool.myboot.domain.dto.param.UserParam">
+        SELECT COUNT(*)
+        FROM user
+        <include refid="BaseSqlWhere"/>
+    </select>
+
+    <!-- 基础模板 取得符合条件的 user 列表手动分页 -->
+    <select id="getListPage" resultMap="ResultMap"
+            parameterType="com.bookool.myboot.domain.dto.param.UserParam">
+        SELECT
+        <include refid="BaseSqlColumnListCustomPage"/>
+        FROM `user` `ta`
+        INNER JOIN
+        (
+        SELECT `id`
+        FROM `user`
+        <include refid="BaseSqlWhere"/>
+        <include refid="BaseSqlPage"/>
+        ) `tb`
+        ON `ta`.`id` = `tb`.`id`
+    </select>
+
+    <!-- 基础模板 取得符合条件的 user 列表 -->
+    <select id="getList" resultMap="ResultMap"
+            parameterType="com.bookool.myboot.domain.dto.param.UserParam">
+        SELECT
+        <include refid="BaseSqlColumnList"/>
+        FROM `user`
+        <include refid="BaseSqlWhere"/>
+        <!-- 快速更新分页,分两段进行查询，先查id大于给定id的部分(id正向排序) -->
+        <if test="pageParam!=null and pageParam.roundMaxId!=null and pageParam.pageSize!=null">
+            ORDER BY `id`
+        </if>
+        <!-- 快速更新分页,分两段进行查询，再查id小于给定id的部分(id反向排序) -->
+        <if test="pageParam!=null and pageParam.roundMinId!=null and pageParam.pageSize!=null">
+            ORDER BY `id` DESC
+        </if>
+        <include refid="BaseSqlPage"/>
+    </select>
+
+    <!-- ^^^^^^^^^^^^^^^^^以上为自动生成代码^^^^^^^^^^^^^^^^^^^^^^ -->
+
+</mapper>

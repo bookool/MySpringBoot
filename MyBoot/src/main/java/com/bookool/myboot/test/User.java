@@ -1,6 +1,6 @@
 package com.bookool.myboot.test;
 
-import com.bookool.myboot.domain.dto.result.UserBaseResult;
+import com.bookool.myboot.domain.dto.result.UserResult;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -10,9 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 public class User {
     public static String getNewUserJsonForTest() {
-        UserBaseResult user = new UserBaseResult();
-        user.setEmail("123");
-        user.setIconUrl("456");
+        UserResult user = new UserResult();
         user.setMobile("789");
         user.setId(1234856789L);
         ObjectMapper mapper = new ObjectMapper();

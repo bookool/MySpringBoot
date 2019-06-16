@@ -89,4 +89,7 @@ spring:
       auto-commit-interval: PT1S
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-
+  data:
+    elasticsearch:
+      cluster-name: docker-cluster-test
+      cluster-nodes: 192.168.255.100:9300

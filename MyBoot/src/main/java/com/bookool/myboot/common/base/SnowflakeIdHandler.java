@@ -130,7 +130,7 @@ public class SnowflakeIdHandler {
     public static Long nextId() {
         //workerId和datacenterId不正常应当抛出异常
         if (workerId < 0 || workerId > MAX_WORKER_ID || datacenterId < 0 || datacenterId > MAX_DATA_CENTER_ID) {
-            throw new RuntimeException("worker id and datacenter id is not set.");
+            throw new RuntimeException("Worker id and datacenter id is not set.");
         }
 
         long timestamp = System.currentTimeMillis();

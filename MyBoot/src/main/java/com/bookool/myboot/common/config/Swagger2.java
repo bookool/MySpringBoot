@@ -36,7 +36,7 @@ public class Swagger2 {
         Contact contact = new Contact("Tommy", "http://bookool.com", "msvbprogrammer@hotmail.com");
         return new ApiInfoBuilder()
                 .title("前台API接口")
-                .description("前台API接口")
+                .description("<a href='code_readme' target='_blank'>响应code说明</a>")
                 .contact(contact)
                 .version("1.0-SNAPSHOT")
                 .build();

@@ -29,81 +29,47 @@ import java.util.Date;
  */
 
 /**
- * UserBase 用户基础信息表实体类
+ * user 用户基础信息表
  *
  * @author Tommy
+ * @date 2019-05-25 20:50:56
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "user_base")
-public class UserBase extends BaseEntity {
+@Table(name = "user")
+public class User extends BaseEntity {
 
     /**
      * 手机号码
      */
     @Column(name = "mobile")
-    private String mobile;
+    private java.lang.String mobile;
 
     /**
-     * 用户名(至少3位,必须包含非数字非符合的字符,不能包含@符)
+     * 用户名
      */
     @Column(name = "user_name")
-    private String userName;
-
-    /**
-     * 电子邮箱
-     */
-    @Column(name = "email")
-    private String email;
-
-    /**
-     * 微信OpenID
-     */
-    @Column(name = "wx_openid")
-    private String wxOpenid;
-
-    /**
-     * 微信UnionID
-     */
-    @Column(name = "wx_unionid")
-    private String wxUnionid;
+    private java.lang.String userName;
 
     /**
      * 用户密码MD5
      */
     @Column(name = "user_password")
-    private String userPassword;
-
-    /**
-     * 用户修改密码的时间
-     */
-    @Column(name = "password_modified")
-    private Date passwordModified;
-
-    /**
-     * 昵称
-     */
-    @Column(name = "nick_name")
-    private String nickName;
-
-    /**
-     * 头像链接地址
-     */
-    @Column(name = "icon_url")
-    private String iconUrl;
+    private java.lang.String userPassword;
 
     /**
      * 用户状态
      */
     @Column(name = "user_state")
-    private Short userState;
+    private java.lang.Integer userState;
 
     /**
-     * 用户等级
+     * 用户修改密码的时间
      */
-    @Column(name = "user_status")
-    private Short userStatus;
+    @Column(name = "password_modified")
+    private java.util.Date passwordModified;
+
 
 }

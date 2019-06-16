@@ -6,8 +6,8 @@ import com.bookool.myboot.common.enums.response.base.CommonResponseEnum;
 import com.bookool.myboot.common.token.user.TokenVerify;
 import com.bookool.myboot.common.token.user.UserTokenHandler;
 import com.bookool.myboot.common.utils.CachedBeanCopier;
-import com.bookool.myboot.domain.dto.result.UserBaseResult;
-import com.bookool.myboot.domain.entity.UserBase;
+import com.bookool.myboot.domain.dto.result.UserResult;
+import com.bookool.myboot.domain.entity.User;
 import com.google.common.collect.ImmutableMap;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -105,12 +105,11 @@ public class TestController extends BaseController {
     @ApiOperation("测试Bean拷贝器")
     @RequestMapping(value = "/testcopier", method = RequestMethod.POST)
     public Map testCopier() {
-        UserBase ub = new UserBase();
-        ub.setId(123L);
-        ub.setEmail("Email");
-        ub.setMobile("Mobile");
-        UserBaseResult ubr = CachedBeanCopier.copyToNew(ub, UserBaseResult.class);
-        return successJsonMsg(ImmutableMap.of("user", ubr));
+        User user = new User();
+        user.setId(123L);
+        user.setMobile("Mobile");
+        UserResult userResult = CachedBeanCopier.copyToNew(user, UserResult.class);
+        return successJsonMsg(ImmutableMap.of("user", userResult));
     }
 
 }

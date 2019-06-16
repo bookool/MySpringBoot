@@ -20,7 +20,7 @@ import java.util.function.Function;
  * @param <R> 返回结果类型
  * @author Tommy
  */
-public class PageListByCustom<T extends BaseParam, R extends BaseResult> extends BasePageList<R> {
+public class PageListImplByCustom<T extends BaseParam, R extends BaseResult> extends BasePageList<T, R> {
 
     /**
      * 通过手写SQL语句创建分页列表对象，使用时通过此方法创建一个 PageList 接口对象返回
@@ -29,16 +29,19 @@ public class PageListByCustom<T extends BaseParam, R extends BaseResult> extends
      * @param countFunction 获取符合条件的记录的个数的方法
      * @param listFunction  获取符合条件的记录列表的方法
      */
-    public PageListByCustom(T param,
-                            Function<T, Long> countFunction,
-                            Function<PageListParam<T>, List<R>> listFunction) {
+    public PageListImplByCustom(T param,
+                                Function<T, Long> countFunction,
+                                Function<T, List<R>> listFunction) {
         Preconditions.checkNotNull(param);
         Preconditions.checkNotNull(countFunction);
         Preconditions.checkNotNull(listFunction);
-        // 请求条件的参数对象
-        PageListParam<T> pageListParam = new PageListParam<>(param);
-        super.requestPageNum = pageListParam.getParam().getPageNum();
-        super.requestPageSize = pageListParam.getParam().getPageSize();
+        // 检查参数
+        super.checkParam(param);
+        // 装入SQL用参数
+        param.getPageParam().setOffset((param.getPageParam().getPageNum() - 1) * param.getPageParam().getPageSize());
+        param.getPageParam().setRows(param.getPageParam().getPageSize());
+        super.requestPageNum = param.getPageParam().getPageNum();
+        super.requestPageSize = param.getPageParam().getPageSize();
         // 先取符合条件记录总数
         super.total = countFunction.apply(param);
         // 如果记录总数为0
@@ -52,14 +55,14 @@ public class PageListByCustom<T extends BaseParam, R extends BaseResult> extends
                 super.pages = (int) Math.ceil((float) super.total / super.getRequestPageSize());
                 // 如果请求页码在所有页数内
                 if (super.getRequestPageNum() <= super.pages) {
-                    this.setList(pageListParam, listFunction);
+                    this.setList(param, listFunction);
                 } else { // 如果请求页码不在所有页数内
                     this.setEmptyList();
                 }
             } else { // 如果没有分页请求
                 // 如果符合条件记录数小于或等于单页请求的最大记录数
                 if (super.total <= BasePageList.PAGE_SIZE_MAX) {
-                    this.setList(pageListParam, listFunction);
+                    this.setList(param, listFunction);
                 } else { // 如果符合条件记录数大于单页请求的最大记录数，抛出异常
                     throw new PageListException(
                             "Request to return %d records, exceeding the limit. " +
@@ -84,8 +87,8 @@ public class PageListByCustom<T extends BaseParam, R extends BaseResult> extends
     /**
      * 设置正常结果列表
      */
-    private void setList(PageListParam<T> pageListParam,
-                         Function<PageListParam<T>, List<R>> listFunction) {
+    private void setList(T pageListParam,
+                         Function<T, List<R>> listFunction) {
         // 设置当前页码
         super.pageNum = super.requestPageNum;
         // 取出当页内记录列表

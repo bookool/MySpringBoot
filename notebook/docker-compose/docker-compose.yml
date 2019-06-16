@@ -1,0 +1,128 @@
+version: "3"
+
+services:
+ 
+  mariadb:
+    image: mariadb
+    container_name: mymariadb
+    restart: unless-stopped
+    ports:
+      - "3306:3306"
+    volumes:
+      - "/work/docker/volumes/mariadb/data:/var/lib/mysql"
+    environment:
+      MYSQL_ROOT_PASSWORD: "123456"
+      MYSQL_ROOT_HOST: "%"
+ 
+  rabbitmq:
+    image: rabbitmq:management
+    container_name: myrabbitmq
+    restart: unless-stopped
+    hostname: rabbitmq1
+    ports:
+      - "5671:5671"
+      - "5672:5672"
+      - "4369:4369"
+      - "25672:25672"
+      - "15671:15671"
+      - "15672:15672"
+    volumes:
+      - /work/docker/volumes/rabbitmq/data:/var/lib/rabbitmq
+      - /work/docker/volumes/rabbitmq/log:/var/log/rabbitmq
+      
+  rocketmq-namesrv:
+    image: rocketmqinc/rocketmq:4.4.0
+    container_name: rmqnamesrv
+    restart: unless-stopped
+    ports:
+      - 9876:9876
+    volumes:
+      - /work/docker/volumes/rocketmq/namesrv/logs:/root/logs
+      - /work/docker/volumes/rocketmq/namesrv/store:/root/store
+    command: sh mqnamesrv
+      
+  rocketmq-broker:
+    image: rocketmqinc/rocketmq:4.4.0
+    container_name: rmqbroker
+    restart: unless-stopped
+    ports:
+      - 10909:10909
+      - 10911:10911
+    volumes:
+      - /work/docker/volumes/rocketmq/broker/logs:/root/logs
+      - /work/docker/volumes/rocketmq/broker/store:/root/store
+      - /work/docker/volumes/rocketmq/broker/config:/root/config
+    command: sh mqbroker -c /root/config/broker.properties -n rocketmq-namesrv:9876
+    depends_on:
+      - rocketmq-namesrv
+      
+  rocketmq-console-ng:
+    image: styletang/rocketmq-console-ng
+    container_name: rmqconsole
+    restart: unless-stopped
+    ports:
+      - 8090:8080
+    environment:
+      JAVA_OPTS: "-Drocketmq.namesrv.addr=192.168.255.100:9876 -Dcom.rocketmq.sendMessageWithVIPChannel=false"
+      
+  zookeeper:
+    image: wurstmeister/zookeeper
+    container_name: myzookeeper
+    restart: unless-stopped
+    hostname: zookeeper1
+    ports:
+      - 2181:2181
+    volumes:
+      - /etc/localtime:/etc/localtime
+      
+  kafka:
+    image: wurstmeister/kafka
+    container_name: mykafka
+    restart: unless-stopped
+    ports:
+      - 9092:9092
+    volumes:
+      - /etc/localtime:/etc/localtime
+    links:
+      - zookeeper
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
+      KAFKA_ADVERTISED_HOST_NAME: "192.168.255.100"
+      KAFKA_ADVERTISED_PORT: "9092"
+      KAFKA_BROKER_ID: 1
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_CREATE_TOPICS: "topic_test:1:1"
+      
+  kafka-manager:
+    image: sheepkiller/kafka-manager
+    container_name: mykafkamanager
+    restart: unless-stopped
+    environment:
+      ZK_HOSTS: zookeeper:2181
+      APPLICATION_SECRET: "letmein"
+    ports:
+      - 9000:9000
+    links:
+      - zookeeper:zookeeper
+      - kafka:kafka
+    depends_on:
+      - zookeeper
+      - kafka
+      
+  elasticsearch:
+    image: tommyguan/elasticsearch-ik-pinyin:6.6.0
+    container_name: myes
+    restart: unless-stopped
+    user: root
+    environment:
+      - discovery.type=single-node
+    volumes:
+      - /work/docker/volumes/elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+      - /work/docker/volumes/elasticsearch/data:/usr/share/elasticsearch/data
+      - /work/docker/volumes/elasticsearch/logs:/usr/share/elasticsearch/logs
+      - /work/docker/volumes/elasticsearch/config/analysis-ik:/usr/share/elasticsearch/config/analysis-ik
+    ports:
+      - 9200:9200
+      - 9300:9300
