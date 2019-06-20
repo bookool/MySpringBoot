@@ -3,6 +3,7 @@ package com.bookool.myboot.controller;
 import com.bookool.myboot.common.base.BaseController;
 import com.bookool.myboot.common.enums.response.UserResponseEnum;
 import com.bookool.myboot.common.enums.response.base.CommonResponseEnum;
+import com.bookool.myboot.common.utils.ResourceUtil;
 import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -21,14 +22,54 @@ import java.util.Set;
  */
 @RestController
 public class HomeController extends BaseController {
+
+    private static String packageString = null;
+
+    private static String pageString = null;
+
+    private static String codeReadme = null;
+
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String home() {
         return "Hello World!";
     }
 
     @Profile({"develop"})
+    @RequestMapping(value = "/package_readme", method = RequestMethod.GET)
+    public String packageReadme() {
+        if (packageString != null) {
+            return packageString;
+        }
+        packageString = ResourceUtil.readResource("/note/package_readme", "<br />");
+        if (packageString != null) {
+            packageString = packageString.replaceAll("\\s", " &nbsp;");
+            packageString = "<html><head><title>响应数据包说明</title></head><body style='line-height:1.8em;'>"
+                    + packageString + "</body></html>";
+        }
+        return packageString;
+    }
+
+    @Profile({"develop"})
+    @RequestMapping(value = "/page_readme", method = RequestMethod.GET)
+    public String pageReadme() {
+        if (pageString != null) {
+            return pageString;
+        }
+        pageString = ResourceUtil.readResource("/note/page_readme", "<br />");
+        if (pageString != null) {
+            pageString = pageString.replaceAll("\\s", " &nbsp;");
+            pageString = "<html><head><title>分页数据包说明</title></head><body style='line-height:1.8em;'>"
+                    + pageString + "</body></html>";
+        }
+        return pageString;
+    }
+
+    @Profile({"develop"})
     @RequestMapping(value = "/code_readme", method = RequestMethod.GET)
     public String codeReadme() {
+        if (codeReadme != null) {
+            return codeReadme;
+        }
         Map<String, Class<?>> linkedHashMap = new LinkedHashMap<>();
         linkedHashMap.put("通用", CommonResponseEnum.class);
         linkedHashMap.put("用户", UserResponseEnum.class);
@@ -48,11 +89,12 @@ public class HomeController extends BaseController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return "<html><head><title>响应code说明</title></head><body>" +
+        codeReadme = "<html><head><title>响应code说明</title></head><body>" +
                 headString.toString() +
                 "<br />" +
                 bodyString.toString() +
                 "</body></html>";
+        return codeReadme;
     }
 
     private String enumToString(Class<?> clazz, String name) throws Exception {
