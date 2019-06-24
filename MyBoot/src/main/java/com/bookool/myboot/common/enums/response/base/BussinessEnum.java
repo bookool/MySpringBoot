@@ -53,12 +53,22 @@ public enum BussinessEnum implements CommonEnum<Integer> {
         return message;
     }
 
-    private static final Map<Integer, String> LOOKUP_MAP = new HashMap<>();
+    private static final Map<Integer, BussinessEnum> LOOKUP_MAP = new HashMap<>();
 
     static {
         for (BussinessEnum e : BussinessEnum.values()) {
-            LOOKUP_MAP.put(e.code, e.message);
+            LOOKUP_MAP.put(e.code, e);
         }
+    }
+
+    /**
+     * 通过枚举代码取得枚举
+     *
+     * @param code 枚举代码
+     * @return 枚举
+     */
+    public static BussinessEnum getEnumByCode(Integer code) {
+        return LOOKUP_MAP.get(code);
     }
 
     /**
@@ -67,9 +77,8 @@ public enum BussinessEnum implements CommonEnum<Integer> {
      * @param code 枚举代码
      * @return 枚举信息
      */
-    public static String getMessateByCode(int code) {
-        return LOOKUP_MAP.get(code);
+    public static String getMessateByCode(Integer code) {
+        return LOOKUP_MAP.get(code).message;
     }
-
 
 }

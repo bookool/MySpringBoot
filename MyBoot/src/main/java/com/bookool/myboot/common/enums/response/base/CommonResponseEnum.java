@@ -68,12 +68,22 @@ public enum CommonResponseEnum implements ResponseEnum {
         return message;
     }
 
-    private static final Map<Integer, String> LOOKUP_MAP = new HashMap<>();
+    private static final Map<Integer, CommonResponseEnum> LOOKUP_MAP = new HashMap<>();
 
     static {
         for (CommonResponseEnum e : CommonResponseEnum.values()) {
-            LOOKUP_MAP.put(e.code, e.message);
+            LOOKUP_MAP.put(e.code, e);
         }
+    }
+
+    /**
+     * 通过枚举代码取得枚举
+     *
+     * @param code 枚举代码
+     * @return 枚举
+     */
+    public static CommonResponseEnum getEnumByCode(Integer code) {
+        return LOOKUP_MAP.get(code);
     }
 
     /**
@@ -82,9 +92,8 @@ public enum CommonResponseEnum implements ResponseEnum {
      * @param code 枚举代码
      * @return 枚举信息
      */
-    public static String getMessateByCode(int code) {
-        return LOOKUP_MAP.get(code);
+    public static String getMessateByCode(Integer code) {
+        return LOOKUP_MAP.get(code).message;
     }
-
 
 }
