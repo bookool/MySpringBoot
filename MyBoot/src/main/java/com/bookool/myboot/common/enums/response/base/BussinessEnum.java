@@ -38,7 +38,7 @@ public enum BussinessEnum implements CommonEnum<Integer> {
      */
     @Contract(pure = true)
     @Override
-    public Integer code() {
+    public Integer getCode() {
         return code;
     }
 
@@ -49,7 +49,7 @@ public enum BussinessEnum implements CommonEnum<Integer> {
      */
     @Contract(pure = true)
     @Override
-    public String message() {
+    public String getMessage() {
         return message;
     }
 
@@ -57,7 +57,7 @@ public enum BussinessEnum implements CommonEnum<Integer> {
 
     static {
         for (BussinessEnum e : BussinessEnum.values()) {
-            LOOKUP_MAP.put(e.code, e);
+            LOOKUP_MAP.put(e.getCode(), e);
         }
     }
 
@@ -78,7 +78,7 @@ public enum BussinessEnum implements CommonEnum<Integer> {
      * @return 枚举信息
      */
     public static String getMessateByCode(Integer code) {
-        return LOOKUP_MAP.get(code).message;
+        return LOOKUP_MAP.get(code).getMessage();
     }
 
 }

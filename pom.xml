@@ -59,7 +59,7 @@
         <!--被继承的父项目的构件标识符-->
         <artifactId>spring-boot-starter-parent</artifactId>
         <!--被继承的父项目的版本-->
-        <version>2.1.5.RELEASE</version>
+        <version>2.1.6.RELEASE</version>
         <!--父项目的pom.xml文件的相对路径。相对路径允许你选择一个不同的路径。默认值是../pom.xml。
             Maven首先在构建当前项目的地方寻找父项目的pom，其次在文件系统的这个位置（relativePath位置），
             然后在本地仓库，最后在远程仓库寻找父项目的pom。-->

@@ -14,13 +14,13 @@ public interface CommonEnum<T extends Number> {
      *
      * @return 枚举代码
      */
-    T code();
+    T getCode();
 
     /**
      * 取得枚举信息
      *
      * @return 枚举信息
      */
-    String message();
+    String getMessage();
 
 }

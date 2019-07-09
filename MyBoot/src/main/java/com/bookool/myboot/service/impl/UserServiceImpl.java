@@ -219,7 +219,7 @@ public class UserServiceImpl implements UserService {
         // id必须存在
         criteria.andEqualTo(User::getId, id);
         // 用户状态为有效
-        criteria.andEqualTo(User::getUserState, UserStateEnum.ENABLE.code());
+        criteria.andEqualTo(User::getUserState, UserStateEnum.ENABLE.getCode());
         // 用户修改密码的时间必须小于token创建时间
         criteria.andLessThan(User::getPasswordModified, createTime);
         return userMapper.selectCountByExample(weekend) == 1;
@@ -247,7 +247,7 @@ public class UserServiceImpl implements UserService {
         } else {
             user = userList.get(0);
             // 用户被禁用
-            if (user.getUserState().equals(UserStateEnum.DISABLE.code())) {
+            if (user.getUserState().equals(UserStateEnum.DISABLE.getCode())) {
                 throw new ResponseException(UserResponseEnum.USER_DISABLE);
             }
             // 密码错误

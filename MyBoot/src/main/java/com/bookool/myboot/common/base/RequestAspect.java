@@ -64,13 +64,15 @@ public class RequestAspect {
             }
             TokenVerify tokenVerify = ((MethodSignature) joinPoint.getSignature()).getMethod()
                     .getAnnotation(TokenVerify.class);
-            ActionEnum action = tokenVerify.value();
-            // 如果需要验证登录
-            if (action.equals(ActionEnum.VERIFY)) {
-                // token 或拿到的用户无效
-                if (userId == null) {
-                    // 返回需要登录的信息
-                    return BaseController.failJsonMsg(CommonResponseEnum.NOT_LOGIN);
+            if (tokenVerify != null) {
+                ActionEnum action = tokenVerify.value();
+                // 如果需要验证登录
+                if (ActionEnum.VERIFY.equals(action)) {
+                    // token 或拿到的用户无效
+                    if (userId == null) {
+                        // 返回需要登录的信息
+                        return BaseController.failJsonMsg(CommonResponseEnum.NOT_LOGIN);
+                    }
                 }
             }
             // 把 user id 放到 request 中，以便后续使用
