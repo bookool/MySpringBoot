@@ -35,10 +35,10 @@
       "search_analyzer": "ik_max_word"
     },
     "userState": {
-      "type": "short"
+      "type": "integer"
     },
     "userStatus": {
-      "type": "short"
+      "type": "integer"
     },
     "remark": {
       "type": "text",
