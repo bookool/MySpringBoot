@@ -111,7 +111,7 @@ public class UserEsServiceImpl implements UserEsService {
     @Override
     public UserDocument getById(String userId) {
         try {
-            return userDocumentRepository.findById(userId).get();
+            return userDocumentRepository.findById(userId).orElse(null);
         } catch (Exception e) {
             e.printStackTrace();
             return null;

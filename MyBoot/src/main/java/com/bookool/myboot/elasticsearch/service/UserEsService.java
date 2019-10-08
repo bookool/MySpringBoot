@@ -23,7 +23,7 @@ public interface UserEsService {
      * 添加一个用户
      *
      * @param userDocument 用户实体
-     * @return 添加的用户实体
+     * @return 是否成功
      */
     boolean save(UserDocument userDocument);
 
