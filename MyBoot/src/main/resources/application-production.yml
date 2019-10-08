@@ -91,4 +91,4 @@ spring:
   data:
     elasticsearch:
       cluster-name: docker-cluster-test
-      cluster-nodes: 192.168.255.100:9.9300
+      cluster-nodes: 192.168.255.100:9300
