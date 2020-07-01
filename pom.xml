@@ -29,7 +29,7 @@
         <mybatis-spring-boot-starter.version>2.0.1</mybatis-spring-boot-starter.version>
         <pagehelper-spring-boot-starter.version>1.2.10</pagehelper-spring-boot-starter.version>
         <mapper-spring-boot-starter.version>2.1.5</mapper-spring-boot-starter.version>
-        <quartz.version>2.3.1</quartz.version>
+        <quartz.version>2.3.2</quartz.version>
         <nimbus-jose-jwt.version>7.2.1</nimbus-jose-jwt.version>
         <freemarker.version>2.3.28</freemarker.version>
         <json-path.version>2.4.0</json-path.version>
