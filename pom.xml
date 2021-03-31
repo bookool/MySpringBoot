@@ -39,7 +39,7 @@
         <aspectjweaver.version>1.9.4</aspectjweaver.version>
         <spring-kafka.version>2.2.6.RELEASE</spring-kafka.version>
         <rocketmq-client.version>4.5.1</rocketmq-client.version>
-        <guava.version>27.1-jre</guava.version>
+        <guava.version>29.0-jre</guava.version>
         <jest.version>6.3.1</jest.version>
         <jna.version>5.3.1</jna.version>
         <lombok.version>1.18.8</lombok.version>
