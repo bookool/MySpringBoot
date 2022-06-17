@@ -35,7 +35,7 @@
         <json-path.version>2.4.0</json-path.version>
         <springfox-swagger2.version>2.9.2</springfox-swagger2.version>
         <springfox-swagger-ui.version>2.9.2</springfox-swagger-ui.version>
-        <fastjson.version>1.2.58</fastjson.version>
+        <fastjson.version>1.2.83</fastjson.version>
         <aspectjweaver.version>1.9.4</aspectjweaver.version>
         <spring-kafka.version>2.2.6.RELEASE</spring-kafka.version>
         <rocketmq-client.version>4.5.1</rocketmq-client.version>
